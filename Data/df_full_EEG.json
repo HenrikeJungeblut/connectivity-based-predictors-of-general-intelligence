@@ -1,0 +1,88 @@
+{
+  "TaskName": "switching+continuous",
+  "CogAtlasID": "https://www.cognitiveatlas.org/task/id/tsk_4a57abb949e8a/",
+  "TaskDescription": "Cued task-switching: Participants see numbers between 1-9 (except 5) and have to either decide whether the number is odd/even (rule-set parity), if cue and target are colored in violet or whether the target is smaller/larger than 5 (rule-set magnitude), if cue and target are colored in orange.",
+  "Instructions": "English Translation (translated with DeepL.com): Decide as quickly and accurately as possible whether the number presented is greater than or less than 5 (ORANGE) OR even or odd (PURPLE). Press: the RIGHT button \"L\" if the number is greater than 5 or even and the LEFT button \"D\" if the number is less than 5 or odd.\\nOriginal:\\nEntscheiden Sie so schnell und genau wie möglich, ob die präsentierte Zahl größer oder kleiner 5 ist (ORANGE) ODER gerade oder ungerade ist (VIOLETT). Drücken Sie: die RECHTE Taste „L\"; wenn die Zahl größer als 5 oder gerade ist und die LINKE Taste „D\", wenn die Zahl kleiner als 5 oder ungerade ist.\"",
+  "InstitutionName": "Johannes Gutenberg-University Mainz",
+  "InstitutionalDepartmentName": "Department of Psychology",
+  "InstitutionAddress": "Wallstrasse 3, 55122 Mainz, Germany",
+  "participant_id": {
+    "LongName": "Participant identifier",
+    "Description": "Unique participant identifier"
+  },
+  "trial_number": {
+    "LongName": "trial number",
+    "Description": "Sequential numbering of the trials."
+  },
+  "trial_type": {
+    "LongName": "trial type",
+    "Description": "Categorisation of each trial according to the experimental condition. Two conditions are defined: the repeat condition, where the task‑set is identical to the previous trial, and the switch condition, where the task‑set changes relative to the previous trial.",
+    "Levels": {
+      "repeat": "task‑set is identical to the previous trial",
+      "switch": "task‑set changes relative to the previous trial"
+    }
+  },
+  "task_set": {
+    "LongName": "task set",
+    "Description": "The current task set that the participant must attend to: Either parity (odd/even) or magnitude (smaller/larger than 5) of the presented target. Each trial requires the participant to respond based on the currently active task set.",
+    "Levels": {
+      "magnitude": "decide whether target number is smaller or larger than 5",
+      "parity": "decide whether target number is odd or even"
+    }
+  },
+  "color_cue": {
+    "LongName": "color of the cue",
+    "Description": "RGB color code of the cue, stored as a comma-separated string (e.g., [255,128,0])"
+  },
+  "color_probe": {
+    "LongName": "color of the target",
+    "Description": "RGB color code of the target, stored as a comma-separated string (e.g., [255,128,0])"
+  },
+  "probe": {
+    "LongName": "target stimulus",
+    "Description": "Integer stimulus (range 1–9, without 5) presented as the target on the current trial. Participants must categorize this number according to the active task set (e.g., parity or magnitude)."
+  },
+  "correct_response": {
+    "LongName": "correct response",
+    "Description": "The response that is considered correct for a given trial, as defined by the experimental design.",
+    "Levels": {
+      "d": "keyboard key <d>",
+      "l": "keyboard key <l>"
+    }
+  },
+  "response": {
+    "LongName": "response",
+    "Description": "Keyboard key pressed by the participant on each trial.",
+    "Levels": {
+      "d": "keyboard key <d>",
+      "l": "keyboard key <l>",
+      "miss": "No key pressed (missed response); participant did not respond",
+      "wrongKey": "Other key than <d> or <l> pressed (incorrect response); any disallowed key"
+    }
+  },
+  "accuracy": {
+    "LongName": "accuracy",
+    "Description": "1 = participant responded correctly; 0 = participant responded incorrectly. Trials with no response are coded as 0 (wrong).",
+    "Units": "boolean"
+  },
+  "response_time": {
+    "LongName": "response time",
+    "Description": "Time (in seconds) from probe onset (cross either on the left or right side) to the participant's key press. If the participant did not respond or used an unallowed key, the value is 'n/a'",
+    "Units": "s"
+  },
+  "fixation_interval": {
+    "LongName": "fixation interval",
+    "Description": "Duration (seconds) that the fixation cross was presented at the start of each trial. The duration was drawn from a uniform distribution between 0.4 and 0.6 s.",
+    "Units": "s"
+  },
+  "ISI": {
+    "LongName": "Inter‑stimulus interval",
+    "Description": "Duration (seconds) between the end of the cue presentation and the onset of the target. The ISI was drawn from a uniform distribution between 0.4 and 0.6 s.",
+    "Units": "s"
+  },
+  "ITI": {
+    "LongName": "Inter‑trial interval",
+    "Description": "Duration (seconds) between the end of the current trial (after the response period) and the onset of the next trial. The ITI was drawn from a uniform distribution between 1.0 and 1.5 s.",
+    "Units": "s"
+  }
+}

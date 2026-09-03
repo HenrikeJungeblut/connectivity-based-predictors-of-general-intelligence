@@ -1,0 +1,8 @@
+"0",""
+"0","#APM"
+"0","r <- cor(df_intelligence$PropCorrOdd,df_intelligence$PropCorrEven, method = ""pearson"", use = ""pairwise.complete.obs"")"
+"0","sh_reliability <- (2 * r) / (1 + r)"
+"0","cat(""Odd-Even reliability of Advanced Progressive matrices is"", sh_reliability)"
+"1","Odd-Even reliability of Advanced Progressive matrices is"
+"1"," "
+"1","0.8721386"

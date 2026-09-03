@@ -1,0 +1,69 @@
+---
+title: "somatomotor analysis"
+output:
+  html_document: default
+  pdf_document: default
+date: "2025-08-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## load packages and data
+
+```{r message=F}
+rm(list = ls())
+
+library(lavaan) # v.0.6-21
+library(here) # v.1.0.1
+library(dplyr) # v.1.2.1 
+
+load(here("Analysis_data", "df_somatomotor_rawfunc.Rda"))
+df <- df_somatomotor_rawfunc
+
+df <- df %>% 
+  rename(
+    SI = "–SI",
+    )
+```
+
+
+## Coupling and Intelligence
+
+```{r}
+SCFC_int_model <- '
+## coupling model
+coupling =~ NA*SI + PT + RE + C + DE
+coupling ~~ 1*coupling
+RE ~~ DE
+PT ~~ DE
+C ~~ 0*C
+
+## intelligence model
+int =~ NA*BIS + equal("int=~BIS")*APM
+int ~~ 1*int
+
+BIS =~ NA*PC_Mean + PS_Mean + C_Mean + M_Mean
+BIS ~~ 1*BIS
+
+APM =~ NA*PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+APM ~~ 1*APM
+
+
+## structural model
+int ~ coupling
+'
+
+fit_SCFC_int <- cfa(SCFC_int_model, data = df, std.lv = T, 
+                      missing = "ML")
+
+summary(fit_SCFC_int, fit.measures = T, standardized = TRUE)
+
+zFit <- standardizedsolution(fit_SCFC_int)
+regressions <- subset(zFit, op == "~")
+
+inspect(fit_SCFC_int, "r2")
+```
+
+

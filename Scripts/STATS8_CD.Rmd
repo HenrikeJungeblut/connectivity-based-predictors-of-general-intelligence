@@ -1,0 +1,108 @@
+---
+title: "CD analysis"
+output:
+  html_document: default
+  pdf_document: default
+date: "2025-08-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## load packages and data
+
+```{r message=F}
+rm(list = ls())
+
+library(lavaan) # v.0.6-21
+library(pheatmap) # v.1.0.12
+library(here) # v.1.0.1
+
+load(here("Analysis_data", "df.Rda"))
+
+```
+
+## CD and Intelligence
+
+```{r}
+CD_int_model <- '
+## CD model
+CD_early =~ NA*E_CD_OE_R + E_CD_OE_S + E_CD_LM_R + E_CD_LM_S
+CD_early ~~ 1*CD_early
+
+CD_late =~ NA*L_CD_OE_R + L_CD_OE_S + L_CD_LM_R + L_CD_LM_S
+CD_late ~~ 1*CD_late
+
+CD_early ~~ CD_late
+
+
+## intelligence model
+int =~ NA*BIS + equal("int=~BIS")*APM
+int ~~ 1*int
+
+BIS =~ NA*PC_Mean + PS_Mean + C_Mean + M_Mean
+BIS ~~ 1*BIS
+
+APM =~ NA*PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+APM ~~ 1*APM
+
+
+## structural model
+int ~ CD_early
+int ~ CD_late
+'
+
+fit_CD_int <- cfa(CD_int_model, data = df, std.lv = T, 
+                      missing = "ML")
+
+summary(fit_CD_int, fit.measures = T, standardized = TRUE)
+parameterEstimates(fit_CD_int, level = 0.95, standardized = T, output = "pretty")
+
+zFit <- standardizedSolution(fit_CD_int)
+regressions <- subset(zFit, op == "~")
+correlations <- subset(zFit, op == "~~")
+
+loadings <- subset(zFit, op == "=~")
+
+```
+
+## heat map of indicators
+
+```{r}
+cor_mat <- cor(df[,c(2:9, 15:18 ,20:21)], method = "pearson", use = "pairwise.complete.obs")
+
+my_palette <- colorRampPalette(c("blue", "white", "red"))(100)  # Adjust colors as needed
+breaks_seq <- seq(-1, 1, length.out = length(my_palette) + 1)
+
+cor_mat[upper.tri(cor_mat)] <- NA
+cor_mat <- cor_mat[, ncol(cor_mat):1]
+
+# add reliabilities to diagonal
+x <- loadings$est.std^2
+x <- x[-c(6,7)]
+n <- nrow(cor_mat)
+cor_mat[cbind(1:n, n:1)] <- round(x, 2)
+cor_mat <- as.data.frame(cor_mat)
+
+num_mat <- round(cor_mat,2)
+num_mat[is.na(num_mat)] <- ""
+
+rownames(cor_mat) <- c("E, CD OE-R", "E, CD OE-S", "E, CD LM-R", "E, CD LM-S", "L, CD OE-R", "L, CD OE-S", "L, CD LM-R", "L, CD LM-S", "BIS PC", "BIS PS", "BIS C", "BIS M", "APM Odd", "APM Even")
+colnames(cor_mat) <- rev(c("E, CD OE-R", "E, CD OE-S", "E, CD LM-R", "E, CD LM-S", "L, CD OE-R", "L, CD OE-S", "L, CD LM-R", "L, CD LM-S", "BIS PC", "BIS PS", "BIS C", "BIS M", "APM Odd", "APM Even"))
+
+manifest_cors <- pheatmap(cor_mat,    
+          cluster_rows = FALSE,  
+          cluster_cols = FALSE,
+         na_col = "white",
+         display_numbers = num_mat,
+         #gaps_row = c(10,20),
+         #gaps_col = c(10,20),
+         border_color = NA,
+         angle_col = "315",
+         breaks = breaks_seq)
+
+png(here("Figures", "STATS07_heatmap.png"), width = 5.5, height = 4.5, units = "in", res = 600)
+print(manifest_cors)
+dev.off()
+```

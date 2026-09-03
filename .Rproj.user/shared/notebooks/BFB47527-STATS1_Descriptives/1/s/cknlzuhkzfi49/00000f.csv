@@ -1,0 +1,4 @@
+"0","df_BIS$IQ <- ((df_BIS$G_total-100)/10)*15+100"
+"0",""
+"0","meanIQ <- mean(df_BIS$IQ[1:215]) # 95.23"
+"0","sdIQ <- sd(df_BIS$IQ[1:215]) # 16.64"

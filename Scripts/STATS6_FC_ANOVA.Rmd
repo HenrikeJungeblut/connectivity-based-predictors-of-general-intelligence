@@ -1,0 +1,77 @@
+---
+title: "FC investigation"
+output: html_notebook
+---
+
+# This FC analysis is EXPLORATORY
+
+## load packages and data
+
+```{r message=F}
+rm(list = ls())
+
+library(afex) # v.1.4-1
+library(here) # v.1.0.1
+library(dplyr) # v.1.2.1 
+library(tidyr) # v.1.3.1
+library(emmeans) # v.2.0.4
+
+df_FC_rest <- 
+  read.csv(here("Analysis_data", "averageFC_rest.csv"), sep=",")
+
+df_FC_res <- 
+  read.csv(here("Analysis_data", "averageFC_res.csv"), sep=",")
+
+df_FC_rawfunc <- 
+  read.csv(here("Analysis_data", "averageFC_rawfunc.csv"), sep=",")
+
+
+```
+
+## prepare data
+
+```{r}
+df <- df_FC_rawfunc %>%
+  left_join(df_FC_res %>%
+      select(sub_name, overall_FC_res = overall_FC, overall_FC_abs_res = overall_FC_abs), by = "sub_name")
+
+df_rest <- df %>%
+  left_join(df_FC_rest %>%
+      select(sub_name, overall_FC_rest = overall_FC, overall_FC_abs_rest = overall_FC_abs), by = "sub_name")
+
+colnames(df) <- c("Subject", "overallFC_rawfunc", "absFC_rawfunc", "overallFC_res", "absFC_res")
+colnames(df_rest) <- c("Subject", "overallFC_rawfunc", "absFC_rawfunc", "overallFC_res", "absFC_res",
+                   "overallFC_rest", "absFC_rest")
+
+data_long <- df %>%
+  pivot_longer(
+    cols = -Subject,
+    names_to = c("Measure", "FC_type"),
+    names_sep = "_",
+    values_to = "FC"
+  )
+
+data_long_rest <- df_rest %>%
+  pivot_longer(
+    cols = -Subject,
+    names_to = c("Measure", "FC_type"),
+    names_sep = "_",
+    values_to = "FC"
+  )
+```
+
+## ANOVA
+
+```{r}
+anova_model <- aov_ez(
+  id = "Subject",
+  dv = "FC",
+  data = data_long,
+  within = c("Measure", "FC_type")
+)
+
+anova_model
+
+emmeans(anova_model, pairwise ~ FC_type | Measure)
+```
+
