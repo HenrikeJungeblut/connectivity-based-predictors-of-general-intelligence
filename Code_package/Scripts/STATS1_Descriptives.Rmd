@@ -22,6 +22,7 @@ library(ggplot2) # v.4.0.2
 library(ggpubr) # v.0.6.0
 library(tidyr) # v.1.3.1
 library(see) # v.0.12.0
+library(afex) # v.1.4-1
 
 df_commMeasures_raw <- 
   read.csv(here("Analysis_data", "coupling_comm_measures.csv"), sep=",")
@@ -205,6 +206,7 @@ sh_reliability <- (2 * r) / (1 + r)
 cat("Odd-Even reliability of Advanced Progressive matrices is", sh_reliability)
 
 ```
+
 ## calculate mean IQ
 
 ```{r}
@@ -374,6 +376,135 @@ print(p)
 dev.off()
 ```
 
+## test differnece between whole-brain and frontoparietal Background FC
+
+```{r}
+df_commMeasures_long <- df_commMeasures_long %>%
+  mutate(Region = "Whole-brain")
+
+df_commMeasures_frontoparietal_long <- df_commMeasures_frontoparietal_long %>%
+  mutate(Region = "Frontoparietal")
+
+dat <- bind_rows(df_commMeasures_long, df_commMeasures_frontoparietal_long)
+
+dat$Subject <- factor(dat$Subject)
+dat$Region <- factor(dat$Region)
+dat$Measure <- factor(dat$Measure)
+
+anova_result <- aov_ez(
+  id = "Subject",
+  dv = "Value",
+  data = dat,
+  within = c("Region", "Measure")
+)
+
+anova_result
+
+# prepare for t-tests per measure
+wide <- dat %>%
+  pivot_wider(
+    id_cols = c(Subject, Measure),
+    names_from = Region,
+    values_from = Value
+  )
+
+t_results <- wide %>%
+  group_by(Measure) %>%
+  summarise(
+    t = t.test(
+      `Whole-brain`,
+      Frontoparietal,
+      paired = TRUE
+    )$statistic,
+    
+    p = t.test(
+      `Whole-brain`,
+      Frontoparietal,
+      paired = TRUE
+    )$p.value,
+    
+    df = t.test(
+      `Whole-brain`,
+      Frontoparietal,
+      paired = TRUE
+    )$parameter,
+    
+    .groups = "drop"
+  )
+
+# Holm correction for p-values
+t_results <- t_results %>%
+  mutate(
+    p_adjusted = p.adjust(p, method = "holm")
+  )
+
+t_results
+```
+## test differnece between whole-brain and frontoparietal Task-evoked FC
+
+```{r}
+df_commMeasures_rawfunc_long <- df_commMeasures_rawfunc_long %>%
+  mutate(Region = "Whole-brain")
+
+df_commMeasures_frontoparietal_rawfunc_long <- df_commMeasures_frontoparietal_rawfunc_long %>%
+  mutate(Region = "Frontoparietal")
+
+dat2 <- bind_rows(df_commMeasures_rawfunc_long, df_commMeasures_frontoparietal_rawfunc_long)
+
+dat2$Subject <- factor(dat2$Subject)
+dat2$Region <- factor(dat2$Region)
+dat2$Measure <- factor(dat2$Measure)
+
+anova_result2 <- aov_ez(
+  id = "Subject",
+  dv = "Value",
+  data = dat2,
+  within = c("Region", "Measure")
+)
+
+anova_result2
+
+# prepare for t-tests per measure
+wide2 <- dat2 %>%
+  pivot_wider(
+    id_cols = c(Subject, Measure),
+    names_from = Region,
+    values_from = Value
+  )
+
+t_results2 <- wide2 %>%
+  group_by(Measure) %>%
+  summarise(
+    t = t.test(
+      `Whole-brain`,
+      Frontoparietal,
+      paired = TRUE
+    )$statistic,
+    
+    p = t.test(
+      `Whole-brain`,
+      Frontoparietal,
+      paired = TRUE
+    )$p.value,
+    
+    df = t.test(
+      `Whole-brain`,
+      Frontoparietal,
+      paired = TRUE
+    )$parameter,
+    
+    .groups = "drop"
+  )
+
+# Holm correction for p-values
+t_results2 <- t_results2 %>%
+  mutate(
+    p_adjusted = p.adjust(p, method = "holm")
+  )
+
+t_results2
+```
+
 ## test difference of early and late CD in task conditions
 
 ```{r}
@@ -401,6 +532,9 @@ anova_result
 df_CD_stats <-df_CD[,2:9] %>%
   describe() %>%
   round(2)
+
+# Delta CD between early and late time window
+df_CD_stats$mean[5:8]-df_CD_stats$mean[1:4]
 ```
 
 

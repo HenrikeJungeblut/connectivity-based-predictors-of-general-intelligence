@@ -20,11 +20,11 @@ library(pheatmap) # v.1.0.12
 library(here) # v.1.0.1
 library(dplyr) # v.1.2.1 
 
-#load(here("Analysis_data", "df_frontoparietal.Rda"))
-#df <- df_frontoparietal
+load(here("Analysis_data", "df_frontoparietal.Rda"))
+df <- df_frontoparietal
 
-load(here("Analysis_data", "df_frontoparietal_rawfunc.Rda"))
-df <- df_frontoparietal_rawfunc
+#load(here("Analysis_data", "df_frontoparietal_rawfunc.Rda"))
+#df <- df_frontoparietal_rawfunc
 
 #load(here("Analysis_data", "df_frontoparietal_rest.Rda"))
 #df <- df_frontoparietal_rest
@@ -113,6 +113,42 @@ manifest_cors <- pheatmap(cor_mat,
 png(here("Figures", "STATS04_heatmap.png"), width = 5.5, height = 4.5, units = "in", res = 600)
 print(manifest_cors)
 dev.off()
+```
+
+
+## fix non-significant regression path to zero to see whether this worsens fit
+
+```{r}
+SCFC_int_model_reg0 <- '
+## coupling model
+coupling =~ NA*DE + SI + PT + RE + C 
+coupling ~~ 1*coupling
+RE ~~ DE
+PT ~~ DE
+C ~~ 0*C
+
+## intelligence model
+int =~ NA*BIS + equal("int=~BIS")*APM
+int ~~ 1*int
+
+BIS =~ NA*PC_Mean + PS_Mean + C_Mean + M_Mean
+BIS ~~ 1*BIS
+
+APM =~ NA*PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+APM ~~ 1*APM
+
+
+## structural model
+int ~ 0*coupling
+'
+
+fit_SCFC_int_reg0 <- cfa(SCFC_int_model_reg0, data = df, std.lv = T, 
+                      missing = "ML")
+
+summary(fit_SCFC_int_reg0, fit.measures = T, standardized = TRUE)
+
+anova(fit_SCFC_int, fit_SCFC_int_reg0)
+
 ```
 
 

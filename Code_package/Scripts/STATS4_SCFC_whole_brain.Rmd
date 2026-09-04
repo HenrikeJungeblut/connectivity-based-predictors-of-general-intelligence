@@ -52,7 +52,6 @@ APM ~~ 1*APM
 
 ## structural model
 int ~ coupling
-#int ~ DE
 '
 
 fit_SCFC_int <- cfa(SCFC_int_model, data = df, std.lv = T, 
@@ -65,7 +64,6 @@ regressions <- subset(zFit, op == "~")
 loadings <- subset(zFit, op == "=~")
 
 ```
-
 
 ## heat map of indicators
 
@@ -106,4 +104,38 @@ manifest_cors <- pheatmap(cor_mat,
 png(here("Figures", "STATS03_heatmap.png"), width = 5.5, height = 4.5, units = "in", res = 600)
 print(manifest_cors)
 dev.off()
+```
+
+
+## fix non-significant regression path to zero to see whether this worsens fit
+
+```{r}
+SCFC_int_model_reg0 <- '
+## coupling model
+coupling =~ NA*SI + PT + RE + C
+coupling ~~ 1*coupling
+C ~~ 0*C
+SI ~~ PT
+
+## intelligence model
+int =~ NA*BIS + equal("int=~BIS")*APM
+int ~~ 1*int
+
+BIS =~ NA*PC_Mean + PS_Mean + C_Mean + M_Mean
+BIS ~~ 1*BIS
+
+APM =~ NA*PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+APM ~~ 1*APM
+
+
+## structural model
+int ~ 0*coupling
+'
+
+fit_SCFC_int_reg0 <- cfa(SCFC_int_model_reg0, data = df, std.lv = T, 
+                      missing = "ML")
+
+summary(fit_SCFC_int_reg0, fit.measures = T, standardized = TRUE)
+
+anova(fit_SCFC_int, fit_SCFC_int_reg0)
 ```
