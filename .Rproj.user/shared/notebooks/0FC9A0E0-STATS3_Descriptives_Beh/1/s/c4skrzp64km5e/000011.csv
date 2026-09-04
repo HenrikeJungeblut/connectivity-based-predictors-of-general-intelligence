@@ -1,5 +1,0 @@
-"0","load(here(""Data"", ""df_full_EEG.Rda""))
-"
-"2","Fehler in here(""Data"", ""df_full_EEG.Rda"") : 
-  konnte Funktion ""here"" nicht finden
-"
