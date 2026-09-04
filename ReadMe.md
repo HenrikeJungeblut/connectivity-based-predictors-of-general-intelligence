@@ -1,6 +1,6 @@
 # Connectivity-based predictors of general intelligence
 
-## Project structure
+## File structure of the Code_package
 
 ```
 Code_package/ 
@@ -65,8 +65,7 @@ Code_package/
 │   │── eeglab2025.0.0/                                                            # eeglab
 │   │   └── ...
 │   └── brewermap.m  
-│── Code_package.Rproj                                                             # R-project to run all R-Markdown scripts in RStudio
-└── README.md 
+└──Code_package.Rproj                                                             # R-project to run all R-Markdown scripts in RStudio
 ```
 
 ## Instructions for running the scripts
