@@ -1,0 +1,141 @@
+---
+title: "Whole Brain analysis"
+output:
+  html_document: default
+  pdf_document: default
+date: "2025-08-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## load packages and data
+
+```{r message=F}
+rm(list = ls())
+
+library(lavaan) # v.0.6-21
+library(pheatmap) # v.1.0.12
+library(here) # v.1.0.1
+library(dplyr) # v.1.2.1 
+
+## pick depending on residualized or normal timeseries
+load(here("Analysis_data", "df.Rda"))
+#load(here("Analysis_data", "df_rawfunc.Rda"))
+#df <- df_rawfunc
+
+df <- rename(df, "SI" = "–SI")
+```
+
+
+## Coupling and Intelligence
+
+```{r}
+SCFC_int_model <- '
+## coupling model
+coupling =~ NA*SI + PT + RE + C
+coupling ~~ 1*coupling
+C ~~ 0*C
+SI ~~ PT
+
+## intelligence model
+int =~ NA*BIS + equal("int=~BIS")*APM
+int ~~ 1*int
+
+BIS =~ NA*PC_Mean + PS_Mean + C_Mean + M_Mean
+BIS ~~ 1*BIS
+
+APM =~ NA*PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+APM ~~ 1*APM
+
+
+## structural model
+int ~ coupling
+'
+
+fit_SCFC_int <- cfa(SCFC_int_model, data = df, std.lv = T, 
+                      missing = "ML")
+
+summary(fit_SCFC_int, fit.measures = T, standardized = TRUE)
+zFit <- standardizedSolution(fit_SCFC_int)
+regressions <- subset(zFit, op == "~")
+
+loadings <- subset(zFit, op == "=~")
+
+```
+
+## heat map of indicators
+
+```{r}
+cor_mat <- cor(df[,c(10:18,20:21)], method = "pearson", use = "pairwise.complete.obs")
+
+my_palette <- colorRampPalette(c("blue", "white", "red"))(100)  # Adjust colors as needed
+breaks_seq <- seq(-1, 1, length.out = length(my_palette) + 1)
+
+cor_mat[upper.tri(cor_mat)] <- NA
+cor_mat <- cor_mat[, ncol(cor_mat):1]
+
+# add reliabilities to diagonal
+x <- loadings$est.std^2
+x <- x[-c(6,7)]
+x <- c(NA, x)
+n <- nrow(cor_mat)
+cor_mat[cbind(1:n, n:1)] <- round(x, 2)
+cor_mat <- as.data.frame(cor_mat)
+
+num_mat <- round(cor_mat,2)
+num_mat[is.na(num_mat)] <- ""
+
+rownames(cor_mat) <- c("DE", "–SI", "PT", "RE", "C", "BIS PC", "BIS PS", "BIS C", "BIS M", "APM Odd", "APM Even")
+colnames(cor_mat) <- rev(c("DE", "–SI", "PT", "RE", "C", "BIS PC", "BIS PS", "BIS C", "BIS M", "APM Odd", "APM Even"))
+
+manifest_cors <- pheatmap(cor_mat,    
+          cluster_rows = FALSE,  
+          cluster_cols = FALSE,
+         na_col = "white",
+         display_numbers = num_mat,
+         #gaps_row = c(10,20),
+         #gaps_col = c(10,20),
+         border_color = NA,
+         angle_col = "315",
+         breaks = breaks_seq)
+
+png(here("Figures", "STATS03_heatmap.png"), width = 5.5, height = 4.5, units = "in", res = 600)
+print(manifest_cors)
+dev.off()
+```
+
+
+## fix non-significant regression path to zero to see whether this worsens fit
+
+```{r}
+SCFC_int_model_reg0 <- '
+## coupling model
+coupling =~ NA*SI + PT + RE + C
+coupling ~~ 1*coupling
+C ~~ 0*C
+SI ~~ PT
+
+## intelligence model
+int =~ NA*BIS + equal("int=~BIS")*APM
+int ~~ 1*int
+
+BIS =~ NA*PC_Mean + PS_Mean + C_Mean + M_Mean
+BIS ~~ 1*BIS
+
+APM =~ NA*PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+APM ~~ 1*APM
+
+
+## structural model
+int ~ 0*coupling
+'
+
+fit_SCFC_int_reg0 <- cfa(SCFC_int_model_reg0, data = df, std.lv = T, 
+                      missing = "ML")
+
+summary(fit_SCFC_int_reg0, fit.measures = T, standardized = TRUE)
+
+anova(fit_SCFC_int, fit_SCFC_int_reg0)
+```

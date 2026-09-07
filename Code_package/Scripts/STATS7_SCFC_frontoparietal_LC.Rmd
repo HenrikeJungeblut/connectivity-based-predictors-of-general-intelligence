@@ -1,0 +1,178 @@
+---
+title: "02_SCFC_frontoparietal_LC"
+author: "Henrike"
+date: "2026-08-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# The frontoparietal latent-change analysis is EXPLORATORY
+
+## load packages and data
+
+```{r message=F}
+rm(list = ls())
+
+library(lavaan) # v.0.6-21
+library(here) # v.1.0.1
+library(dplyr) # v.1.2.1 
+
+load(here("Analysis_data", "df_frontoparietal.Rda"))
+df_frontoparietal <- rename(df_frontoparietal, "SI" = "–SI")
+
+load(here("Analysis_data", "df_frontoparietal_rest.Rda"))
+df_frontoparietal_rest <- rename(df_frontoparietal_rest, "SI" = "–SI")
+
+load(here("Analysis_data", "df_frontoparietal_rawfunc.Rda"))
+df_frontoparietal_rawfunc <- rename(df_frontoparietal_rawfunc, "SI" = "–SI")
+
+df <- df_frontoparietal %>%
+  left_join(
+    df_frontoparietal_rawfunc %>%
+      select(
+        Subject,
+        DE_rawfunc = DE,
+        SI_rawfunc = SI,
+        PT_rawfunc = PT,
+        RE_rawfunc = RE,
+        C_rawfunc = C
+      ),
+    by = "Subject"
+  )
+
+df_rest <- df_frontoparietal_rest %>%
+  left_join(
+    df_frontoparietal_rawfunc %>%
+      select(
+        Subject,
+        DE_rawfunc = DE,
+        SI_rawfunc = SI,
+        PT_rawfunc = PT,
+        RE_rawfunc = RE,
+        C_rawfunc = C
+      ),
+    by = "Subject"
+  )
+
+```
+
+
+
+## Coupling and Intelligence LC from Background FC to task-evoked FC
+
+```{r}
+SCFC_int_model <- '
+## coupling model
+coupling =~ SI + PT + RE + C + DE
+RE ~~ DE
+PT ~~ DE
+C ~~ 0*C
+
+coupling_rawfunc =~ SI_rawfunc + PT_rawfunc + RE_rawfunc + C_rawfunc + DE_rawfunc
+RE_rawfunc ~~ DE_rawfunc
+PT_rawfunc ~~ DE_rawfunc
+C_rawfunc ~~ 0*C_rawfunc
+
+SI ~~	SI_rawfunc
+PT ~~ PT_rawfunc
+RE ~~ RE_rawfunc
+#C ~~ C_rawfunc
+DE ~~ DE_rawfunc
+
+
+
+# autoregressive path
+coupling_rawfunc ~ 1*coupling 
+
+# residual variance of coupling_rawfunc to zero
+coupling_rawfunc ~~ 0*coupling_rawfunc
+
+# latent change factor
+change =~ 1*coupling_rawfunc
+
+# covariance of coupling and change 
+coupling ~~ change
+
+## intelligence model
+int =~ BIS + equal("int=~BIS")*APM
+
+BIS =~ PC_Mean + PS_Mean + C_Mean + M_Mean
+
+APM =~ PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+
+
+## structural model
+int ~ change
+'
+
+fit_SCFC_int <- sem(SCFC_int_model, data = df,
+                      missing = "ML")
+
+summary(fit_SCFC_int, fit.measures = T, standardized = TRUE)
+
+zFit <- standardizedsolution(fit_SCFC_int)
+regressions <- subset(zFit, op == "~")
+correlations <- subset(zFit, op == "~~")
+
+inspect(fit_SCFC_int, "r2")
+```
+
+
+## Coupling and Intelligence LC from Rest FC to task-evoked FC
+
+```{r}
+SCFC_int_model <- '
+## coupling model
+coupling =~ SI + PT + RE + C + DE
+RE ~~ DE
+PT ~~ DE
+C ~~ 0*C
+
+coupling_rawfunc =~ SI_rawfunc + PT_rawfunc + RE_rawfunc + C_rawfunc + DE_rawfunc
+RE_rawfunc ~~ DE_rawfunc
+PT_rawfunc ~~ DE_rawfunc
+C_rawfunc ~~ 0*C_rawfunc
+
+SI ~~	SI_rawfunc
+PT ~~ PT_rawfunc
+RE ~~ RE_rawfunc
+#C ~~ C_rawfunc
+DE ~~ DE_rawfunc
+
+# autoregressive path
+coupling_rawfunc ~ 1*coupling 
+
+# residual variance of coupling_rawfunc to zero
+coupling_rawfunc ~~ 0*coupling_rawfunc
+
+# latent change factor
+change =~ 1*coupling_rawfunc
+
+# covariance of coupling and change 
+coupling ~~ change
+
+## intelligence model
+int =~ BIS + equal("int=~BIS")*APM
+
+BIS =~ PC_Mean + PS_Mean + C_Mean + M_Mean
+
+APM =~ PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+
+
+## structural model
+int ~ change
+'
+
+fit_SCFC_int <- sem(SCFC_int_model, data = df_rest, missing = "ML")
+
+summary(fit_SCFC_int, fit.measures = T, standardized = TRUE)
+
+zFit <- standardizedsolution(fit_SCFC_int)
+regressions <- subset(zFit, op == "~")
+correlations <- subset(zFit, op == "~~")
+
+inspect(fit_SCFC_int, "r2")
+```
