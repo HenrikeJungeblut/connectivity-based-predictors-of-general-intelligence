@@ -25,14 +25,13 @@ addpath(fullfile(PATH_MAIN, 'Code_package', 'Tools', 'eeglab2025.0.0'));
 % plotting
 latent_cors_late =  table2array(readtable(fullfile(PATH_IN_cors, 'latent_cors_late.csv')));
 
-lims = [-1 1];
-
 figure;
 topoplot(latent_cors_late, EEG.x, ...
     'style', 'straight', ...
     'electrodes','labels');
 title({'CD in the Late', 'Time Window', 'and Intelligence'},FontSize=16);
 colormap(flipud(brewermap(256,'RdBu')))   % or any ColorBrewer map
+clims = [-1 1];
 h = colorbar;
 h.Position = [0.92 0.11 0.02 0.815];   % moves the colorbar to the right side
 h.Label.String = 'Latent Correlation';
