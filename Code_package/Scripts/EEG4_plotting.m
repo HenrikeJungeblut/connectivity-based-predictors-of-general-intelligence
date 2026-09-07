@@ -31,7 +31,7 @@ topoplot(latent_cors_late, EEG.x, ...
     'electrodes','labels');
 title({'CD in the Late', 'Time Window', 'and Intelligence'},FontSize=16);
 colormap(flipud(brewermap(256,'RdBu')))   % or any ColorBrewer map
-clims = [-1 1];
+clim([-0.3 0.3]);
 h = colorbar;
 h.Position = [0.92 0.11 0.02 0.815];   % moves the colorbar to the right side
 h.Label.String = 'Latent Correlation';
