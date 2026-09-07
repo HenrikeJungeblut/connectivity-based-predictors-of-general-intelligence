@@ -25,7 +25,7 @@ addpath(fullfile(PATH_MAIN, 'Code_package', 'Tools', 'eeglab2025.0.0'));
 % plotting
 latent_cors_late =  table2array(readtable(fullfile(PATH_IN_cors, 'latent_cors_late.csv')));
 
-lims = [-0.3 0.3];
+lims = [-1 1];
 
 figure;
 topoplot(latent_cors_late, EEG.x, ...
