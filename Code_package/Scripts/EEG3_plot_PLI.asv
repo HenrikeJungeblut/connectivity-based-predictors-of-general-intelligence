@@ -1,0 +1,184 @@
+%% define paths
+
+filepath   = cd;
+parts = regexp(filepath,filesep,'split');
+PATH_MAIN   = fullfile(parts{1:end-2});
+addpath(fullfile(PATH_MAIN, 'Code_package', 'Tools', 'eeglab2025.0.0'));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% not reproducible as preprocessed EEG data and connectivity matrices     %
+% are not provided                                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PATH_IN        = fullfile(PATH_MAIN, 'preprocessed/');
+PATH_IN_CONN = fullfile(PATH_MAIN, 'subject_conny_matrices');
+
+allSets = dir(fullfile(PATH_IN, '*.set'));
+
+%% channel combinations
+G_channels = "G" + compose("%02d", 1:30);
+Y_channels = "Y" + compose("%02d", 1:30);
+channels = [G_channels, Y_channels, "Cz"];
+pairs = nchoosek(channels, 2);
+channel_combinations = pairs(:,1) + "_" + pairs(:,2);
+channel_combinations = channel_combinations(contains(channel_combinations, "G04"));
+
+%% initialize empty matrices
+% in the end, each matrix contains a row per channel combination and this
+% is filled with the average PLI across participants for each time point
+
+mat_LMR_mean = zeros(length(channel_combinations), 4000);
+mat_LMS_mean = zeros(length(channel_combinations), 4000);
+mat_OER_mean = zeros(length(channel_combinations), 4000);
+mat_OES_mean = zeros(length(channel_combinations), 4000);
+
+% LM-R
+for combs = 1:length(channel_combinations) 
+    for cond = {'LM-R'}
+    mat_all_sub = zeros(length(allSets), 4000);
+        for n = 1:length(allSets)
+            subject = allSets(n).name(1:7);
+            filename = fullfile(PATH_IN_CONN, [subject '_' cond{1} '_pli_', channel_combinations{combs} '.csv']);
+            mat = readmatrix(filename);
+            mat_all_sub(n,:) = mat;
+        end
+        avg = mean(mat_all_sub,1);
+    end
+    mat_LMR_mean(combs, :) = avg;
+end
+
+
+% LM-S
+for combs = 1:length(channel_combinations) 
+    for cond = {'LM-S'}
+    mat_all_sub = zeros(length(allSets), 4000);
+        for n = 1:length(allSets)
+            subject = allSets(n).name(1:7);
+            filename = fullfile(PATH_IN_CONN, [subject '_' cond{1} '_pli_', channel_combinations{combs} '.csv']);
+            mat = readmatrix(filename);
+            mat_all_sub(n,:) = mat;
+        end
+        avg = mean(mat_all_sub,1);
+    end
+    mat_LMS_mean(combs, :) = avg;
+end
+
+% OE_R
+for combs = 1:length(channel_combinations) 
+    for cond = {'OE-R'}
+    mat_all_sub = zeros(length(allSets), 4000);
+        for n = 1:length(allSets)
+            subject = allSets(n).name(1:7);
+            filename = fullfile(PATH_IN_CONN, [subject '_' cond{1} '_pli_', channel_combinations{combs} '.csv']);
+            mat = readmatrix(filename);
+            mat_all_sub(n,:) = mat;
+        end
+        avg = mean(mat_all_sub,1);
+    end
+    mat_OER_mean(combs, :) = avg;
+end
+
+% OE-S
+for combs = 1:length(channel_combinations)
+    for cond = {'OE-S'}
+        mat_all_sub = zeros(length(allSets), 4000);
+        for n = 1:length(allSets)
+            subject = allSets(n).name(1:7);
+            filename = fullfile(PATH_IN_CONN, [subject '_' cond{1} '_pli_', channel_combinations{combs} '.csv']);
+            mat = readmatrix(filename);
+            mat_all_sub(n,:) = mat;
+        end
+        avg = mean(mat_all_sub,1);
+    end
+    mat_OES_mean(combs, :) = avg;
+end
+
+
+
+%% plotting
+
+EEG = load('chanlocs.mat');
+
+mat_LMR_timewindows = [mean(mat_LMR_mean(:, 1:2000), 2), mean(mat_LMR_mean(:, 2001:2376), 2), mean(mat_LMR_mean(:, 2377:2625), 2), mean(mat_LMR_mean(:, 2626:4000), 2)];
+mat_LMR_timewindows = [mat_LMR_timewindows(1:3,:); NaN(1,4); mat_LMR_timewindows(4:59,:); NaN(1,4)];
+
+mat_LMS_timewindows = [mean(mat_LMS_mean(:, 1:2000), 2), mean(mat_LMS_mean(:, 2001:2376), 2), mean(mat_LMS_mean(:, 2377:2625), 2), mean(mat_LMR_mean(:, 2626:4000), 2)];
+mat_LMS_timewindows = [mat_LMS_timewindows(1:3,:); NaN(1,4); mat_LMS_timewindows(4:59,:); NaN(1,4)];
+
+mat_OER_timewindows = [mean(mat_OER_mean(:, 1:2000), 2), mean(mat_OER_mean(:, 2001:2376), 2), mean(mat_OER_mean(:, 2377:2625), 2), mean(mat_LMR_mean(:, 2626:4000), 2)];
+mat_OER_timewindows = [mat_OER_timewindows(1:3,:); NaN(1,4); mat_OER_timewindows(4:59,:); NaN(1,4)];
+
+mat_OES_timewindows = [mean(mat_OES_mean(:, 1:2000), 2), mean(mat_OES_mean(:, 2001:2376), 2), mean(mat_OES_mean(:, 2377:2625), 2), mean(mat_LMR_mean(:, 2626:4000), 2)];
+mat_OES_timewindows = [mat_OES_timewindows(1:3,:); NaN(1,4); mat_OES_timewindows(4:59,:); NaN(1,4)];
+
+% plot averaged across task conditions
+avg_mat = (mat_LMR_timewindows + mat_LMS_timewindows + mat_OER_timewindows + mat_OES_timewindows)/4;
+
+
+load(fullfile(PATH_MAIN, 'Code_package', 'Data', 'avg_mat'));
+
+figure;
+windows = {'BL', 'Early', 'Late', 'After'};
+for win = 1:4
+
+    subplot(1,4,win);
+
+    topoplot(avg_mat(:,win), EEG.x, ...
+        'style','straight', ...
+        'electrodes','on');
+
+    title(sprintf('%s', windows{win}), 'FontSize', 14);
+
+    clim([0.05 0.1]);
+
+end
+
+% Common colorbar
+h = colorbar;
+h.Position = [0.92 0.11 0.02 0.815];
+h.Label.String = 'PLI';
+h.Label.FontSize = 12;
+colormap(brewermap(256,'Spectral'));
+
+
+
+
+figure;
+% BL
+subplot(1,4,1);
+topoplot(mat_LMR_timewindows(:,1), EEG.x, ...
+    'style', 'straight', ...
+    'electrodes', 'labels');
+title({'PLI in BL', 'Time Window'}, 'FontSize', 16);
+clim([0.05 0.08]);
+
+% early
+subplot(1,4,2);
+topoplot(mat_LMR_timewindows(:,2), EEG.x, ...
+    'style', 'straight', ...
+    'electrodes', 'labels');
+title({'PLI in the Early', 'Time Window'}, 'FontSize', 16);
+clim([0.05 0.08]);
+
+% late
+subplot(1,4,3);
+topoplot(mat_LMR_timewindows(:,3), EEG.x, ...
+    'style', 'straight', ...
+    'electrodes', 'labels');
+title({'PLI in the Late', 'Time Window'}, 'FontSize', 16);
+clim([0.05 0.08]);
+
+% after
+subplot(1,4,4);
+topoplot(mat_LMR_timewindows(:,4), EEG.x, ...
+    'style', 'straight', ...
+    'electrodes', 'labels');
+title({'PLI after the', 'Time Windows'}, 'FontSize', 16);
+
+clim([0.05 0.08]);
+h = colorbar;
+h.Position = [0.92 0.11 0.02 0.815];
+h.Label.String = 'PLI';
+h.Label.FontSize = 12;
+colormap(flipud(brewermap(256,'RdBu')));
+
+%saveas(gcf,fullfile(PATH_MAIN, 'Code_package', 'Figures', 'EEG4_CD_latent_corrs.png'));

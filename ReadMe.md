@@ -45,7 +45,7 @@ Code_package/
 │── Scripts/                                                                        # analysis scripts
 │   │── EEG1_preprocessing.m                                                                   
 │   │── ...                                                  
-│   │── EEG4_plotting.m                                                                
+│   │── EEG5_plotting.m                                                                
 │   │── MRI0_check_resampling_consequences.m  
 │   │── ...                                                  
 │   │── MRI8_SCFCcoupling_somatomotor.m                                                          
@@ -99,8 +99,9 @@ The following R libraries need to be installed. We provide the version number of
 ### 1. EEG preprocessing and generation of EEG analysis data
 
 1. EEG1_preprocessing.m **(NOT REPRODUCIBLE because raw EGG data is not provided in code package)**
-2. EEG2_TF_CD_EKP.m **(NOT REPRODUCIBLE because raw EGG data is not provided in code package)**
-3. EEG3_extract_CD_in_timewindows.m
+2. EEG2_TF_CD_EKP.m **(NOT REPRODUCIBLE because preprocessed EGG data is not provided in code package)**
+3. EEG3_plot_PLI.m **(NOT FULLY REPRODUCIBLE because connectivity matrices are not provided)**
+4. EEG4_extract_CD_in_timewindows.m
 
 ### 2. Generation of MRI analysis data and MRI reliability
 
@@ -124,7 +125,7 @@ The following R libraries need to be installed. We provide the version number of
 8. STATS7_SCFC_frontoparietal_LC.Rmd
 9. STATS8_CD.Rmd
 10. STATS9_extract_latent_cors_CD.Rmd
-11. EEG4_plotting.m
+11. EEG5_plotting.m
 12. STATS10_exploratory_analysis_CD.Rmd
 
 ### 4. Supplementary analyses

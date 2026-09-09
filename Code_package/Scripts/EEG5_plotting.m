@@ -37,4 +37,4 @@ h.Position = [0.92 0.11 0.02 0.815];   % moves the colorbar to the right side
 h.Label.String = 'Latent Correlation';
 h.Label.FontSize = 12;
 
-saveas(gcf,fullfile(PATH_MAIN, 'Code_package', 'Figures', 'EEG4_CD_latent_corrs.png'));
+saveas(gcf,fullfile(PATH_MAIN, 'Code_package', 'Figures', 'EEG5_CD_latent_corrs.png'));
