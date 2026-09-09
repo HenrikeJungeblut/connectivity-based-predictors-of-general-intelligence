@@ -24,7 +24,7 @@ addpath(fullfile(PATH_MAIN, 'Code_package', 'Tools', '2019_03_03_BCT'));
 % the script has to be run twice: Once for res (background FC) and once for
 % rawfunc (task-evoked FC). Only the variable data_type needs to be
 % adjusted.
-for data_type = ["rest", "res", "rawfunc"] %res: background connectivity/rawfunc: task-evoked
+for data_type = ["rest", "rawfunc", "rest"] %res: background connectivity/rawfunc: task-evoked
     if strcmp(data_type, 'res')
         PATH_IN = fullfile(PATH_MAIN, 'Code_package', 'MRI', 'func', 'timeseries_per_region', 'res_');
         PATH_OUT = fullfile(PATH_MAIN, 'Code_package', 'Analysis_data', 'coupling_comm_measures.csv');
@@ -138,7 +138,7 @@ for data_type = ["rest", "res", "rawfunc"] %res: background connectivity/rawfunc
             rh_mat = [rh_mat(:, 1:2), zeros(size(rh_mat, 1), 1), rh_mat(:, 3:end)];
         end
 
-        % in case, parcel 120 is ssing as resampling consequence, fill matrix
+        % in case, parcel 120 is missing as resampling consequence, fill matrix
         % with zero column to account for size mismatch
         if size(lh_mat,2) == 179
             lh_mat = [lh_mat(:, 1:119), zeros(size(lh_mat, 1), 1), lh_mat(:, 120:end)];
