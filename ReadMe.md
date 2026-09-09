@@ -12,6 +12,7 @@ Code_package/
 │── Data/                                                                                       
 │   │── APM.json                                                                    # Advanced Progressive Matrices code book
 │   │── APM.RData                                                                   # Advanced Progressive Matrices data frame
+│   │── avg_mat.mat                                                                 # for creating topoplot
 │   │── BIS_Complete_processed.csv                                                  # Berlin Intelligence Structure test data frame
 │   │── BIS_Complete_processed.json                                                 # Berlin Intelligence Structure test code book
 │   │── chanlocs.mat                                                                # for creating topoplot
