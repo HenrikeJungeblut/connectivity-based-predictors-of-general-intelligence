@@ -81,7 +81,7 @@ The following R libraries need to be installed. We provide the version number of
 
 | **Library** | **Version** |
 | -------- | -----------|
-| afex     | v.1.4-1    |
+| afex     | v.1.5-1    |
 | dplyr    | v.1.2.1    |
 | emmeans  | v.2.0.4    |
 | ggplot2  | v.4.0.2    |
