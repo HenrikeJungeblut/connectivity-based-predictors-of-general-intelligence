@@ -38,6 +38,10 @@ for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-e
     subjectNames = subjectNames{1};
 
     %% remove outliers who perform only around chance level
+    % Additionally, the subjects sub-025, sub-027, sub-063, sub-091, sub-122,
+    % sub-138, sub-163 are excluded because these subjects have disconnected 
+    % structural somatomotor networks (W), which leads to issues in 
+    % downstream calculation of communication matrices
     to_remove = {'sub-032', 'sub-062', 'sub-076', 'sub-095', 'sub-096', 'sub-129', ...
         'sub-147', 'sub-151', 'sub-160', 'sub-165', 'sub-172', 'sub-174', 'sub-180', ...
         'sub-184', 'sub-188', 'sub-190', 'sub-194', 'sub-195', 'sub-205', 'sub-211', ...
