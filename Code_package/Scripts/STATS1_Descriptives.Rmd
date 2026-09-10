@@ -195,7 +195,7 @@ alpha_total <- psych::alpha(df_BIS[1:215,c("BD_score", "TG_score", "XG_score",
                                      "LO_score", "EF_score", "DR_score")]) 
 
 alpha_PS$total # 0.47
-alpha_PC$total # 0.78
+alpha_PC$total # 0.77
 alpha_M$total # 0.60
 alpha_C$total # 0.44
 alpha_total$total # 0.80
@@ -391,15 +391,6 @@ dat$Subject <- factor(dat$Subject)
 dat$Region <- factor(dat$Region)
 dat$Measure <- factor(dat$Measure)
 
-anova_result <- aov_ez(
-  id = "Subject",
-  dv = "Value",
-  data = dat,
-  within = c("Region", "Measure")
-)
-
-anova_result
-
 # prepare for t-tests per measure
 wide <- dat %>%
   pivot_wider(
@@ -454,15 +445,6 @@ dat2 <- bind_rows(df_commMeasures_rawfunc_long, df_commMeasures_frontoparietal_r
 dat2$Subject <- factor(dat2$Subject)
 dat2$Region <- factor(dat2$Region)
 dat2$Measure <- factor(dat2$Measure)
-
-anova_result2 <- aov_ez(
-  id = "Subject",
-  dv = "Value",
-  data = dat2,
-  within = c("Region", "Measure")
-)
-
-anova_result2
 
 # prepare for t-tests per measure
 wide2 <- dat2 %>%
