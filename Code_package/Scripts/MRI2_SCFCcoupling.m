@@ -24,7 +24,7 @@ addpath(fullfile(PATH_MAIN, 'Code_package', 'Tools', '2019_03_03_BCT'));
 % the script has to be run twice: Once for res (background FC) and once for
 % rawfunc (task-evoked FC). Only the variable data_type needs to be
 % adjusted.
-for data_type = ["rest", "rawfunc", "rest"] %res: background connectivity/rawfunc: task-evoked
+% for data_type = ["rest", "rawfunc", "rest"] %res: background connectivity/rawfunc: task-evoked
     if strcmp(data_type, 'res')
         PATH_IN = fullfile(PATH_MAIN, 'Code_package', 'MRI', 'func', 'timeseries_per_region', 'res_');
         PATH_OUT = fullfile(PATH_MAIN, 'Code_package', 'Analysis_data', 'coupling_comm_measures.csv');
@@ -44,18 +44,11 @@ for data_type = ["rest", "rawfunc", "rest"] %res: background connectivity/rawfun
     subjectNames = subjectNames{1};
 
     %remove outliers who perform only around chance level
-    if strcmp(data_type, 'rest')
-        to_remove = {'sub-032', 'sub-062', 'sub-076', 'sub-095', 'sub-096', 'sub-129', ...
-        'sub-147', 'sub-151', 'sub-160', 'sub-165', 'sub-172', 'sub-174', 'sub-180', ...
-        'sub-184', 'sub-188', 'sub-190', 'sub-194', 'sub-195', 'sub-205', 'sub-211', ...
-        'sub-212', 'sub-213', 'sub-214', 'sub-215', 'sub-109', 'sub-116'};
-    else
-        to_remove = {'sub-032', 'sub-062', 'sub-076', 'sub-095', 'sub-096', 'sub-129', ...
+    to_remove = {'sub-032', 'sub-062', 'sub-076', 'sub-095', 'sub-096', 'sub-129', ...
         'sub-147', 'sub-151', 'sub-160', 'sub-165', 'sub-172', 'sub-174', 'sub-180', ...
         'sub-184', 'sub-188', 'sub-190', 'sub-194', 'sub-195', 'sub-205', 'sub-211', ...
         'sub-212', 'sub-213', 'sub-214', 'sub-215'};
-    end
-    
+
     % Filter out the outliers
     subjectNames_filtered = subjectNames(~ismember(subjectNames, to_remove));
 
