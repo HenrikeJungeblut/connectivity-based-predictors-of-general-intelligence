@@ -133,7 +133,7 @@ for win = 1:4
         'style','straight', ...
         'electrodes','on');
 
-    title(sprintf('%s', windows{win}), 'FontSize', 14);
+    title(sprintf('%s', windows{win}), 'FontSize', 18);
 
     clim([0.05 0.1]);
 
@@ -143,7 +143,7 @@ end
 h = colorbar;
 h.Position = [0.92 0.11 0.02 0.815];
 h.Label.String = 'PLI';
-h.Label.FontSize = 12;
-colormap(brewermap(256,'RdPu'));
+h.Label.FontSize = 16;
+colormap(brewermap(256,'PuBu'));
 
 saveas(gcf,fullfile(PATH_MAIN, 'Code_package', 'Figures', 'EEG3_CD_latent_corrs.png'));
