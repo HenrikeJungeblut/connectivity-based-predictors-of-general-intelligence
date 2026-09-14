@@ -74,6 +74,7 @@ Code_package/
 │   │   └── ...
 │   │── eeglab2025.0.0/                                                            # eeglab
 │   │   └── ...
+│   │── HCP-MMP_parcels_assinged_to_networks                                       # look-up table to assign parcels to networks
 │   └── brewermap.m  
 └──Code_package.Rproj                                                             # R-project to run all R-Markdown scripts in RStudio
 ```
