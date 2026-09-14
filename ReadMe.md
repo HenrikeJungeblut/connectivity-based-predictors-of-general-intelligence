@@ -46,10 +46,19 @@ Code_package/
 │── Scripts/                                                                        # analysis scripts
 │   │── EEG1_preprocessing.m                                                                   
 │   │── ...                                                  
-│   │── EEG5_plotting.m                                                                
+│   │── EEG5_plotting.m   
+│   │── FC1_registration_T1.sh  
+│   │── ...                                                  
+│   │── FC6_write_label_values                                                                
 │   │── MRI0_check_resampling_consequences.m  
 │   │── ...                                                  
-│   │── MRI8_SCFCcoupling_somatomotor.m                                                          
+│   │── MRI8_SCFCcoupling_somatomotor.m            
+│   │── MRIPrePro1_recon_all.sh  
+│   │── ...                                                  
+│   │── MRIPrePro11_dtifit.sh  
+│   │── SC1_registration.sh
+│   │── ...                                                  
+│   │── SC7_tck2connectome.sh                                         
 │   │── STATS0_Power_analysis.Rmd      
 │   │── ...                                                 
 │   │── STATS10_exploratory_analysis_CD.Rmd  
@@ -103,6 +112,47 @@ The following R libraries need to be installed. We provide the version number of
 2. EEG2_TF_CD_EKP.m **(NOT REPRODUCIBLE because preprocessed EGG data is not provided in code package)**
 3. EEG3_plot_PLI.m **(NOT FULLY REPRODUCIBLE because connectivity matrices are not provided)**
 4. EEG4_extract_CD_in_timewindows.m
+
+### 2. general MRI preprocessing
+
+**(The following scripts are NOT REPRODUCIBLE because raw MRI data is not provided in code package)**
+
+1. MRIPrePro1_recon_all.sh
+2. MRIPrePro2_project_to_subject.sh
+3. MRIPrePro3_registration_T1.sh
+4. MRIPrePro4_tissue_seg.sh
+5. MRIPrePro5_fMRIPrep.sh
+6. MRIPrePro6_tedana.sh
+7. MRIPrePro7_topup.sh
+8. MRIPrePro8_topup_bet.sh
+9. MRIPrePro9_eddy.sh
+10. MRIPrePro10_dwibiascorrect.sh
+11. MRIPrePro11_dtifit.sh
+
+### 3. Structural connectivity matrices generation scripts
+
+**(The following scripts are NOT REPRODUCIBLE because raw MRI data is not provided in code package)**
+
+1. SC1_registration.sh
+2. SC2_mask_dilation.sh
+3. SC3_response_function.sh
+4. SC4_FODs.sh
+5. SC5_ACT.sh
+6. SC6_SIFT.sh
+7. SC7_tck2connectome.sh
+
+### 4. Functional connectivity matrices generation scripts
+
+**(The following scripts are NOT REPRODUCIBLE because raw MRI data is not provided in code package)**
+
+1. FC1_registration_t1.sh
+2. FC2_registration_task.sh
+3. FC3_FEAT_confounds.py
+4. FC4_run_FEAT_rawfunc.sh
+5. FC4_run_FEAT.sh
+6. FC5_extract_timeseries_rawfunc.sh
+7. FC5_extract_timeseries.sh
+8. FC6_write_label_values.sh
 
 ### 2. Generation of MRI analysis data and MRI reliability
 
