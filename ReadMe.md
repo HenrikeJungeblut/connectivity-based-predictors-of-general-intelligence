@@ -52,7 +52,7 @@ Code_package/
 │   │── FC6_write_label_values                                                                
 │   │── MRI0_check_resampling_consequences.m  
 │   │── ...                                                  
-│   │── MRI8_SCFCcoupling_somatomotor.m            
+│   │── MRI6_SCFCcoupling_somatomotor.m            
 │   │── MRIPrePro1_recon_all.sh  
 │   │── ...                                                  
 │   │── MRIPrePro11_dtifit.sh  
@@ -160,10 +160,8 @@ The following R libraries need to be installed. We provide the version number of
 1. MRI0_check_resampling_consequences.m
 2. MRI1_check_SC_matrices.m
 3. MRI2_SCFCcoupling.m
-4. MRI3_SCFCcoupling_Reliabilität.m
-5. MRI4_SCFCcoupling_frontoparietal.m
-6. MRI5_SCFCcoupling_frontoparietal_Reliabilität.m
-7. MRI6_meanFC.m
+5. MRI3_SCFCcoupling_frontoparietal.m
+7. MRI4_meanFC.m
 
 ### 3. Statistical analysis
 
@@ -182,11 +180,11 @@ The following R libraries need to be installed. We provide the version number of
 
 ### 4. Supplementary analyses
 
-1. MRI7_SCFCcoupling_visual.m
+1. MRI5_SCFCcoupling_visual.m
 2. SUPP1_Descriptives_visual.Rmd
 3. SUPP2_SCFC_visual.Rmd
 4. SUPP3_SCFC_visual_LC.Rmd
-5. MRI8_SCFCcoupling_somatomotor.m
+5. MRI6_SCFCcoupling_somatomotor.m
 6. SUPP4_Descriptives_somatomotor.Rmd
 7. SUPP5_SCFC_somatomotor.Rmd
 8. SUPP6_SCFC_somatomotor_LC.Rmd
