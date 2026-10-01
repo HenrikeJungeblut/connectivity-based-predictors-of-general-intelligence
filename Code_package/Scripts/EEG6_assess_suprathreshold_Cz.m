@@ -171,3 +171,29 @@ mean(results_L_G01(425:636))
 
 mean(results_E_G01(637:848))
 mean(results_L_G01(637:848))
+
+% G02
+mean(results_E_G02(1:212))
+mean(results_L_G02(1:212))
+
+mean(results_E_G02(213:424))
+mean(results_L_G02(213:424))
+
+mean(results_E_G02(425:636))
+mean(results_L_G02(425:636))
+
+mean(results_E_G02(637:848))
+mean(results_L_G02(637:848))
+
+% Y01
+mean(results_E_Y01(1:212))
+mean(results_L_Y01(1:212))
+
+mean(results_E_Y01(213:424))
+mean(results_L_Y01(213:424))
+
+mean(results_E_Y01(425:636))
+mean(results_L_Y01(425:636))
+
+mean(results_E_Y01(637:848))
+mean(results_L_Y01(637:848))
