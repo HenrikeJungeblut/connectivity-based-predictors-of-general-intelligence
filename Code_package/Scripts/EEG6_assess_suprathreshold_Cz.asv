@@ -62,13 +62,13 @@ results_L_G01 = [];
 for cond = {'LM-R','LM-S','OE-R','OE-S'}
 
     % time windows
-    if if strcmp(cond, 'LM-R')
+    if strcmp(cond, 'LM-R')
         early = [1; 351];
         late = [352; 584];
-    elseif if strcmp(cond, 'LM-S')
+    elseif strcmp(cond, 'LM-S')
         early = [1; 344];
         late = [345; 591];
-    elseif cond == {'OE-R'}
+    elseif strcmp(cond, 'OE-R')
         early = [1; 376];
         late = [377; 625];
     else
@@ -133,3 +133,29 @@ for cond = {'LM-R','LM-S','OE-R','OE-S'}
 
 
 end % End condition loop
+
+% Cz
+mean(results_E_Cz(1:212))
+mean(results_L_Cz(1:212))
+
+mean(results_E_Cz(213:424))
+mean(results_L_Cz(213:424))
+
+mean(results_E_Cz(425:636))
+mean(results_L_Cz(425:636))
+
+mean(results_E_Cz(637:848))
+mean(results_L_Cz(637:848))
+
+% G01
+mean(results_E_G01(1:212))
+mean(results_L_Cz(1:212))
+
+mean(results_E_Cz(213:424))
+mean(results_L_Cz(213:424))
+
+mean(results_E_Cz(425:636))
+mean(results_L_Cz(425:636))
+
+mean(results_E_Cz(637:848))
+mean(results_L_G01(637:848))

@@ -56,6 +56,10 @@ results_E_Cz = [];
 results_L_Cz = [];
 results_E_G01 = [];
 results_L_G01 = [];
+results_E_G02 = [];
+results_L_G02 = [];
+results_E_Y01 = [];
+results_L_Y01 = [];
 
 
 % Iterate through experimental conditions
@@ -122,14 +126,48 @@ for cond = {'LM-R','LM-S','OE-R','OE-S'}
         E_num_suprathresh_Cz = sum(squeeze(connythresh(4,61,early(1):early(2))))/length(early(1):early(2));
         L_num_suprathresh_Cz = sum(squeeze(connythresh(4,61,late(1):late(2))))/length(late(1):late(2));
         E_num_suprathresh_G01 = sum(squeeze(connythresh(4,1,early(1):early(2))))/length(early(1):early(2));
-        L_num_suprathresh_G01 = sum(squeeze(connythresh(4,61,late(1):late(2))))/length(late(1):late(2));
+        L_num_suprathresh_G01 = sum(squeeze(connythresh(4,1,late(1):late(2))))/length(late(1):late(2));
+        E_num_suprathresh_G02 = sum(squeeze(connythresh(4,2,early(1):early(2))))/length(early(1):early(2));
+        L_num_suprathresh_G02 = sum(squeeze(connythresh(4,2,late(1):late(2))))/length(late(1):late(2));
+        E_num_suprathresh_Y01 = sum(squeeze(connythresh(4,31,early(1):early(2))))/length(early(1):early(2));
+        L_num_suprathresh_Y01 = sum(squeeze(connythresh(4,31,late(1):late(2))))/length(late(1):late(2));
 
         results_E_Cz = [results_E_Cz, E_num_suprathresh_Cz];
         results_L_Cz = [results_L_Cz, L_num_suprathresh_Cz];
         results_E_G01 = [results_E_G01, E_num_suprathresh_G01];
         results_L_G01 = [results_L_G01, L_num_suprathresh_G01];
+        results_E_G02 = [results_E_G02, E_num_suprathresh_G02];
+        results_L_G02 = [results_L_G02, L_num_suprathresh_G02];
+        results_E_Y01 = [results_E_Y01, E_num_suprathresh_Y01];
+        results_L_Y01 = [results_L_Y01, L_num_suprathresh_Y01];
 
     end % End subject loop
 
 
 end % End condition loop
+
+% Cz
+mean(results_E_Cz(1:212))
+mean(results_L_Cz(1:212))
+
+mean(results_E_Cz(213:424))
+mean(results_L_Cz(213:424))
+
+mean(results_E_Cz(425:636))
+mean(results_L_Cz(425:636))
+
+mean(results_E_Cz(637:848))
+mean(results_L_Cz(637:848))
+
+% G01
+mean(results_E_G01(1:212))
+mean(results_L_G01(1:212))
+
+mean(results_E_G01(213:424))
+mean(results_L_G01(213:424))
+
+mean(results_E_G01(425:636))
+mean(results_L_G01(425:636))
+
+mean(results_E_G01(637:848))
+mean(results_L_G01(637:848))
