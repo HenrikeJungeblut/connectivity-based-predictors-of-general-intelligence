@@ -65,7 +65,7 @@ for ch = channels
     filenameLMS = "connydegree_traces_chan_" + ch + "_pli_LM-S.csv";
 
     CD_OE_R = table2array(readtable(fullfile(PATH_IN_CD, filenameOER)));
-    CD_OE_R(:,1:2000) = []; % wo genau ist der Target Onset?
+    CD_OE_R(:,1:2000) = []; 
     CD_OE_R([41 160 183 184],:) = []; % remove subjects sub-041, sub-162, sub-186, sub-187 who scored below chance level in the cognitive control task
     CD_OE_S = table2array(readtable(fullfile(PATH_IN_CD, filenameOES)));
     CD_OE_S(:,1:2000) = []; 

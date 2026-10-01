@@ -1,0 +1,135 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title:         Connectivity-based predictors of intelligence            %
+% Subtitle:      general EEG preprocessing                                %
+% Author:        Anna-Lena Schubert, Henrike Jungeblut                    %
+% Last Modified: 09/2026                                                  %
+% Note:          this script is not reproducible as preprocessed EEG data %
+%                is not provided in the code package                      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% ---------- Set Up ------------------------------------------------------
+
+% define PATHs
+% notebook
+% define PATHs
+[filepath,~,~] = fileparts(matlab.desktop.editor.getActiveFilename);
+parts = regexp(filepath,filesep,'split');
+PATH_MAIN   = fullfile(parts{1:end-2});
+PATH_MAIN2   = fullfile(parts{1:end-5});
+
+
+PATH_EEGLAB    = fullfile(PATH_MAIN, 'Code_package', 'Tools', 'eeglab2025.0.0');
+
+PATH_IN        = fullfile(PATH_MAIN2, '4_derivative', 'preprocessed');
+PATH_SUB_CONNY_MATS = fullfile(PATH_MAIN2, '4_derivative', 'subject_conny_matrices/');
+
+allSets = dir(fullfile(PATH_IN, '*.set'));
+
+
+%% ======================= CONNECTIVITY DEGREE =================================================================================================
+load(fullfile(PATH_MAIN2, '4_derivative', 'Scripts','EEGMat.mat'));
+DAT = EEG;
+
+% Get all channel combinations
+channel_combs = nchoosek(1:DAT.nbchan, 2);
+channel_name_combs = cell(size(channel_combs));
+
+for i = 1:size(channel_combs, 1)
+    channel_name_combs{i, 1} = DAT.chanlocs(channel_combs(i, 1)).labels;
+    channel_name_combs{i, 2} = DAT.chanlocs(channel_combs(i, 2)).labels;
+end
+
+% define base measure. May be 'ispc' pr 'pli'
+base_measure = 'pli';
+
+% Get frequencies and time
+tf_time = DAT.times;
+tf_frqs = 6;
+
+% Define frequency of interest
+connyfreq = 6;
+[~, frq_idx] = min(abs(tf_frqs - connyfreq));
+actual_frq = tf_frqs(frq_idx);
+
+% Result matrices
+results_E_Cz = [];
+results_L_Cz = [];
+results_E_G01 = [];
+results_L_G01 = [];
+
+
+% Iterate through experimental conditions
+for cond = {'LM-R','LM-S','OE-R','OE-S'}
+
+    % time windows
+    if if strcmp(cond, 'LM-R')
+        early = [1; 351];
+        late = [352; 584];
+    elseif if strcmp(cond, 'LM-S')
+        early = [1; 344];
+        late = [345; 591];
+    elseif cond == {'OE-R'}
+        early = [1; 376];
+        late = [377; 625];
+    else
+        early = [1; 345];
+        late = [346; 633];
+    end
+
+    
+    % Iterate through all subjects in the dataset folder
+    for s = 1:length(allSets)
+        
+        % Initialize 3D connectivity matrix [Channels x Channels x Time]
+        connymat = zeros(EEG.nbchan, EEG.nbchan, length(tf_time));
+        
+        % Iterate through all predefined pairs of channels (edges)
+        for ch = 1:size(channel_name_combs, 1)
+            
+            % Print progress to command window
+            fprintf('\nreading sub (%i/%i) chans (%i/%i)', s, length(allSets), ch, size(channel_name_combs, 1));
+            
+            % Construct filename and load the pairwise connectivity time series
+            filename = [PATH_SUB_CONNY_MATS allSets(s).name(1:7) '_' char(cond) '_' base_measure '_' char(channel_name_combs(ch, 1)) '_' char(channel_name_combs(ch, 2)) '.csv'];
+            stim = dlmread(filename);
+            
+            % Populate the symmetric connectivity cube at the target frequency
+            connymat(channel_combs(ch, 1), channel_combs(ch, 2), :) = stim(frq_idx, :);
+            connymat(channel_combs(ch, 2), channel_combs(ch, 1), :) = stim(frq_idx, :);
+            
+        end % End channel pair iteration
+        
+        connymat = connymat(:,:,2001:4000);
+        % Initialize binary adjacency matrix for thresholded networks
+        connythresh = zeros(EEG.nbchan, EEG.nbchan, length(tf_time)/2);
+        
+        % Apply dynamic thresholding at every single time point
+        for t = 1:size(connymat, 3)
+            
+            % Extract lower triangle (excluding zeros/diagonal) to find network baseline
+            tmp = nonzeros(tril(squeeze(connymat(:, :, t))));
+            
+            % Define threshold (median + 1 standard deviation)
+            thresh = median(tmp) + std(tmp);
+            
+            % Binarize the slice: 1 if connection exceeds threshold, 0 otherwise
+            connyslice = zeros(EEG.nbchan, EEG.nbchan);
+            connyslice(squeeze(connymat(:, :, t)) > thresh) = 1;
+            connythresh(:, :, t) = connyslice;
+            
+        end
+        
+        E_num_suprathresh_Cz = sum(squeeze(connythresh(4,61,early(1):early(2))))/length(early(1):early(2));
+        L_num_suprathresh_Cz = sum(squeeze(connythresh(4,61,late(1):late(2))))/length(late(1):late(2));
+        E_num_suprathresh_G01 = sum(squeeze(connythresh(4,1,early(1):early(2))))/length(early(1):early(2));
+        L_num_suprathresh_G01 = sum(squeeze(connythresh(4,61,late(1):late(2))))/length(late(1):late(2));
+
+        results_E_Cz = [results_E_Cz, E_num_suprathresh_Cz];
+        results_L_Cz = [results_L_Cz, L_num_suprathresh_Cz];
+        results_E_G01 = [results_E_G01, E_num_suprathresh_G01];
+        results_L_G01 = [results_L_G01, L_num_suprathresh_G01];
+
+    end % End subject loop
+
+
+end % End condition loop

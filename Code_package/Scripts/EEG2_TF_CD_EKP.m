@@ -378,12 +378,9 @@ for n=2:length(allSets)
                 as2 = reshape(as2, DAT.pnts, minn);
 
                 phasediffs = exp(1i * (angle(as1) - angle(as2)));
-                %mat_ispc(f, :) = abs(mean(phasediffs, 2));
                 mat_pli(f, :) = abs(mean(sign(imag(phasediffs)), 2));
             end
 
-            %dlmwrite([PATH_SUB_CONNY_MATS allSets(n).name(1:7) '_' char(cond) '_ispc_' ...
-                    %  char(channel_name_combs{ch,1}) '_' char(channel_name_combs{ch,2}) '.csv'], mat_ispc);
             dlmwrite([PATH_SUB_CONNY_MATS allSets(n).name(1:7) '_' char(cond) '_pli_' ...
                       char(channel_name_combs{ch,1}) '_' char(channel_name_combs{ch,2}) '.csv'], mat_pli);
 
