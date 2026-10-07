@@ -1,8 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Title:         Connectivity-based predictors of intelligence            %
-% Subtitle:      general EEG preprocessing                                %
+% Subtitle:      assessing percentage of suprathreshold Cz                %
 % Author:        Anna-Lena Schubert, Henrike Jungeblut                    %
-% Last Modified: 09/2026                                                  %
+% Last Modified: 10/2026                                                  %
 % Note:          this script is not reproducible as preprocessed EEG data %
 %                is not provided in the code package                      %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -19,7 +19,12 @@ PATH_MAIN2   = fullfile(parts{1:end-5});
 
 
 PATH_EEGLAB    = fullfile(PATH_MAIN, 'Code_package', 'Tools', 'eeglab2025.0.0');
+PATH_OUT    = fullfile(PATH_MAIN, 'Code_package', 'Analysis_data/');
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% not reproducible as preprocessed EEG data and connectivity matrices     %
+% are not provided                                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 PATH_IN        = fullfile(PATH_MAIN2, '4_derivative', 'preprocessed');
 PATH_SUB_CONNY_MATS = fullfile(PATH_MAIN2, '4_derivative', 'subject_conny_matrices/');
 
@@ -146,54 +151,66 @@ for cond = {'LM-R','LM-S','OE-R','OE-S'}
 
 end % End condition loop
 
-% Cz
-mean(results_E_Cz(1:212))
-mean(results_L_Cz(1:212))
 
-mean(results_E_Cz(213:424))
-mean(results_L_Cz(213:424))
+output = [results_E_Cz(:), ...
+          results_L_Cz(:), ...
+          results_E_G01(:), ...
+          results_L_G01(:), ...
+          results_E_G02(:), ...
+          results_L_G02(:), ...
+          results_E_Y01(:), ...
+          results_L_Y01(:)];
 
-mean(results_E_Cz(425:636))
-mean(results_L_Cz(425:636))
+writematrix(output, fullfile(PATH_OUT, 'suprathreshold_results.csv'));
 
-mean(results_E_Cz(637:848))
-mean(results_L_Cz(637:848))
-
-% G01
-mean(results_E_G01(1:212))
-mean(results_L_G01(1:212))
-
-mean(results_E_G01(213:424))
-mean(results_L_G01(213:424))
-
-mean(results_E_G01(425:636))
-mean(results_L_G01(425:636))
-
-mean(results_E_G01(637:848))
-mean(results_L_G01(637:848))
-
-% G02
-mean(results_E_G02(1:212))
-mean(results_L_G02(1:212))
-
-mean(results_E_G02(213:424))
-mean(results_L_G02(213:424))
-
-mean(results_E_G02(425:636))
-mean(results_L_G02(425:636))
-
-mean(results_E_G02(637:848))
-mean(results_L_G02(637:848))
-
-% Y01
-mean(results_E_Y01(1:212))
-mean(results_L_Y01(1:212))
-
-mean(results_E_Y01(213:424))
-mean(results_L_Y01(213:424))
-
-mean(results_E_Y01(425:636))
-mean(results_L_Y01(425:636))
-
-mean(results_E_Y01(637:848))
-mean(results_L_Y01(637:848))
+% % Cz
+% mean(results_E_Cz(1:212))
+% mean(results_L_Cz(1:212))
+% 
+% mean(results_E_Cz(213:424))
+% mean(results_L_Cz(213:424))
+% 
+% mean(results_E_Cz(425:636))
+% mean(results_L_Cz(425:636))
+% 
+% mean(results_E_Cz(637:848))
+% mean(results_L_Cz(637:848))
+% 
+% % G01
+% mean(results_E_G01(1:212))
+% mean(results_L_G01(1:212))
+% 
+% mean(results_E_G01(213:424))
+% mean(results_L_G01(213:424))
+% 
+% mean(results_E_G01(425:636))
+% mean(results_L_G01(425:636))
+% 
+% mean(results_E_G01(637:848))
+% mean(results_L_G01(637:848))
+% 
+% % G02
+% mean(results_E_G02(1:212))
+% mean(results_L_G02(1:212))
+% 
+% mean(results_E_G02(213:424))
+% mean(results_L_G02(213:424))
+% 
+% mean(results_E_G02(425:636))
+% mean(results_L_G02(425:636))
+% 
+% mean(results_E_G02(637:848))
+% mean(results_L_G02(637:848))
+% 
+% % Y01
+% mean(results_E_Y01(1:212))
+% mean(results_L_Y01(1:212))
+% 
+% mean(results_E_Y01(213:424))
+% mean(results_L_Y01(213:424))
+% 
+% mean(results_E_Y01(425:636))
+% mean(results_L_Y01(425:636))
+% 
+% mean(results_E_Y01(637:848))
+% mean(results_L_Y01(637:848))

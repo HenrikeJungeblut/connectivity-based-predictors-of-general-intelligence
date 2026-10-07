@@ -1,3 +1,12 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title:         Connectivity-based predictors of intelligence            %
+% Subtitle:      plotting PLI                                             %
+% Author:        Henrike Jungeblut                                        %
+% Last Modified: 09/2026                                                  %
+% Note:          this script is not reproducible as preprocessed EEG data %
+%                and connectivity matrices are not provided in the code   %
+%                package                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% define paths
 
 filepath   = cd;

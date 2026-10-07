@@ -46,7 +46,7 @@ Code_package/
 │── Scripts/                                                                        # analysis scripts
 │   │── EEG1_preprocessing.m                                                                   
 │   │── ...                                                  
-│   │── EEG5_plotting.m   
+│   │── EEG6_assess_suprathreshold_Cz.m   
 │   │── FC1_registration_T1.sh  
 │   │── ...                                                  
 │   │── FC6_write_label_values                                                                
@@ -188,6 +188,7 @@ The following R libraries need to be installed. We provide the version number of
 6. SUPP4_Descriptives_somatomotor.Rmd
 7. SUPP5_SCFC_somatomotor.Rmd
 8. SUPP6_SCFC_somatomotor_LC.Rmd
+9. EEG6_assess_suprathreshold_Cz.m **(NOT FULLY REPRODUCIBLE because preprocessed EEG data and connectivity matrices are not provided)**
 
 ## Code books for provided data sets
 

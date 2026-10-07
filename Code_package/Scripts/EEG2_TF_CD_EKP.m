@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Title:         Connectivity-based predictors of intelligence            %
-% Subtitle:      general EEG preprocessing                                %
+% Subtitle:      calculating CD and ERPs                                  %
 % Author:        Anna-Lena Schubert, Henrike Jungeblut                    %
 % Last Modified: 09/2026                                                  %
 % Note:          this script is not reproducible as preprocessed EEG data %
@@ -106,14 +106,8 @@ for n=2:length(allSets)
     col=col+1; artefact_overview(1,col) = marker_start_num;
     col=col+1; artefact_overview(1,col) = EEG.srate;
 
-    % Low pass filtering at 25 Hz for consistency with other connectivity
-    % papers
-    %EEG = pop_eegfiltnew(EEG, 'hicutoff', 25);
-
     % extract trials (no baseline removal)
     EEG = pop_epoch(EEG, event_indices, epoch_limits);
-    % remove last trial for subject 0002, as last trial is incomplete (no RT)
-    % if n==2, EEG = pop_select(EEG, 'trial', 1:267); end 
 
     % detect artefactual epochss
     EEG = pop_eegthresh(EEG, 1, 1:EEG.nbchan ,-500,500,0,EEG.xmax,0,0);
@@ -124,9 +118,6 @@ for n=2:length(allSets)
     REJ_KURT = EEG.reject.rejkurt;
     REJ_ALL  = logical(REJ_KURT + REJ_JP + REJ_THRE);
     EEG = eeg_rejsuperpose( EEG, 1, 1, 1, 1, 1, 1, 1, 1); %marks trials for rejection
-
-    % save artefactual epochs
-    %EEG.etc.epoch_info(:,10) = EEG.reject.rejglobal;
 
     % save stats of rejection
     col=col+1; artefact_overview(1,col) = EEG.trials;
@@ -168,9 +159,7 @@ for n=2:length(allSets)
     out1.artefact_epochs_varnames = artefact_epochs_varnames;
 
     % reject trials with EEG artifacts
-    %EEG.etc.epoch_info(EEG.reject.rejglobal,:) = []; %removes bad epochs, after this, everything in 0 in EEG.etc.epoch_info
-    EEG = pop_rejepoch(EEG, find(EEG.reject.rejglobal), 0); %actually removes the epochs (not just in EEG.etc.epoch_info)
-
+    EEG = pop_rejepoch(EEG, find(EEG.reject.rejglobal), 0); 
 
     % ---------- Remove incorrect trials from EEG.event ------------------
 
@@ -184,7 +173,6 @@ for n=2:length(allSets)
 
     for m = 1: length(EEG.event)
         if strcmp(EEG.event(m).type,'S 31')
-            %counter6 = counter6 + 1;
            EEG.event(m+2).Condition = 'LM-R';
         elseif strcmp(EEG.event(m).type,'S 32')
             EEG.event(m+2).Condition = 'LM-S';
@@ -312,18 +300,15 @@ for n=2:length(allSets)
             channel_name_combs{i, 2} = DAT.chanlocs(channel_combs(i, 2)).labels;
         end
 
-        %channel_combs = nchoosek([1 : DAT.nbchan], 2);
 
         % Set convolution parameters
         wavelet_time = -2 : 1 / DAT.srate : 2;
-        %frequencies = linspace(freqrange(1), freqrange(2), n_freqs);
         frequencies = 6;
         minn = EEG.trials;
         n_data = DAT.pnts *minn;
         n_kernel = length(wavelet_time);
         n_convolution = n_data + n_kernel - 1;
         half_wavelet = (length(wavelet_time) - 1) / 2;
-        %n_cycles = logspace(log10(n_cycles(1)), log10(n_cycles(2)), n_freqs);
         n_cycles = 4;
 
         % Save frequencies and time
