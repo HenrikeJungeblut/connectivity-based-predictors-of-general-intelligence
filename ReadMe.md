@@ -18,7 +18,9 @@ Code_package/
 │   │── chanlocs.mat                                                                # for creating topoplot
 │   │── df_full_EEG.Rda                                                             # behavioral data from EEG task
 │   │── df_full_MRI.Rda                                                             # behavioral data from MRI task
-│   └── subject_list.txt
+│   │── subject_list.txt                                                           
+│   │── suprathreshold_results.csv                                                  # results of supplementary Cz analysis data frame
+│   └── suprathreshold_results.json                                                 # results of supplementary Cz analysis code book
 │── erp/                                                                            # contains the ERP datasets
 │   │── erp_ALS.csv                                                                 # manually picked P3 latencies for each participant and each task condition
 │   │── switching_target_locked_sub-001.erp
