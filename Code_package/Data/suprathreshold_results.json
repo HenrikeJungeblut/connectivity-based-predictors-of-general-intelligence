@@ -1,0 +1,37 @@
+{
+  "InstitutionName": "Johannes Gutenberg-University Mainz",
+  "InstitutionalDepartmentName": "Department of Psychology",
+  "InstitutionAddress": "Wallstrasse 3, 55122 Mainz, Germany",
+  "E_Cz": {
+    "LongName": "Early time window, electrode Cz",
+    "Description": "Per person, per condition proportion of early-window time points at which the connection between channels G04 and Cz exceeds the threshold (median + 1 SD)"
+  },
+  "L_Cz": {
+    "LongName": "Late time window, electrode Cz",
+    "Description": "Per person, per condition proportion of late-window time points at which the connection between channels G04 and Cz exceeds the threshold (median + 1 SD)"
+  },
+  "E_G01": {
+    "LongName": "Early time window, electrode G01",
+    "Description": "Per person, per condition proportion of early-window time points at which the connection between channels G04 and G01 exceeds the threshold (median + 1 SD)"
+  },
+  "L_G01": {
+    "LongName": "Late time window, electrode G01",
+    "Description": "Per person, per condition proportion of late-window time points at which the connection between channels G04 and G01 exceeds the threshold (median + 1 SD)"
+  },
+  "E_G02": {
+    "LongName": "Early time window, electrode G02",
+    "Description": "Per person, per condition proportion of early-window time points at which the connection between channels G04 and G02 exceeds the threshold (median + 1 SD)"
+  },
+  "L_G02": {
+    "LongName": "Late time window, electrode G02",
+    "Description": "Per person, per condition proportion of late-window time points at which the connection between channels G04 and G02 exceeds the threshold (median + 1 SD)"
+  },
+  "E_Y01": {
+    "LongName": "Early time window, electrode Y01",
+    "Description": "Per person, per condition proportion of early-window time points at which the connection between channels G04 and Y01 exceeds the threshold (median + 1 SD)"
+  },
+  "L_G01": {
+    "LongName": "Late time window, electrode Y01",
+    "Description": "Per person, per condition proportion of late-window time points at which the connection between channels G04 and Y01 exceeds the threshold (median + 1 SD)"
+  }
+}

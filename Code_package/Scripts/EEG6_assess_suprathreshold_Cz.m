@@ -19,7 +19,7 @@ PATH_MAIN2   = fullfile(parts{1:end-5});
 
 
 PATH_EEGLAB    = fullfile(PATH_MAIN, 'Code_package', 'Tools', 'eeglab2025.0.0');
-PATH_OUT    = fullfile(PATH_MAIN, 'Code_package', 'Analysis_data/');
+PATH_OUT    = fullfile(PATH_MAIN, 'Code_package', 'Data/');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % not reproducible as preprocessed EEG data and connectivity matrices     %
@@ -160,57 +160,16 @@ output = [results_E_Cz(:), ...
           results_L_G02(:), ...
           results_E_Y01(:), ...
           results_L_Y01(:)];
+headings = {'E_Cz', 'L_Cz', ...
+            'E_G01', 'L_G01', ...
+            'E_G02', 'L_G02', ...
+            'E_Y01', 'L_Y01'};
 
-writematrix(output, fullfile(PATH_OUT, 'suprathreshold_results.csv'));
+outputTable = array2table(output, 'VariableNames', headings);
 
-% % Cz
-% mean(results_E_Cz(1:212))
-% mean(results_L_Cz(1:212))
-% 
-% mean(results_E_Cz(213:424))
-% mean(results_L_Cz(213:424))
-% 
-% mean(results_E_Cz(425:636))
-% mean(results_L_Cz(425:636))
-% 
-% mean(results_E_Cz(637:848))
-% mean(results_L_Cz(637:848))
-% 
-% % G01
-% mean(results_E_G01(1:212))
-% mean(results_L_G01(1:212))
-% 
-% mean(results_E_G01(213:424))
-% mean(results_L_G01(213:424))
-% 
-% mean(results_E_G01(425:636))
-% mean(results_L_G01(425:636))
-% 
-% mean(results_E_G01(637:848))
-% mean(results_L_G01(637:848))
-% 
-% % G02
-% mean(results_E_G02(1:212))
-% mean(results_L_G02(1:212))
-% 
-% mean(results_E_G02(213:424))
-% mean(results_L_G02(213:424))
-% 
-% mean(results_E_G02(425:636))
-% mean(results_L_G02(425:636))
-% 
-% mean(results_E_G02(637:848))
-% mean(results_L_G02(637:848))
-% 
-% % Y01
-% mean(results_E_Y01(1:212))
-% mean(results_L_Y01(1:212))
-% 
-% mean(results_E_Y01(213:424))
-% mean(results_L_Y01(213:424))
-% 
-% mean(results_E_Y01(425:636))
-% mean(results_L_Y01(425:636))
-% 
-% mean(results_E_Y01(637:848))
-% mean(results_L_Y01(637:848))
+writetable(outputTable, fullfile(PATH_OUT, 'suprathreshold_results.csv'));
+
+
+mean(results_L_Cz)
+mean(results_L_G02)
+mean(results_L_Y01)
