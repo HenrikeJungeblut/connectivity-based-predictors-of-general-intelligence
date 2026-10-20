@@ -65,6 +65,10 @@ results_E_G02 = [];
 results_L_G02 = [];
 results_E_Y01 = [];
 results_L_Y01 = [];
+results_E_G03 = [];
+results_L_G03 = [];
+results_E_Y02 = [];
+results_L_Y02 = [];
 
 
 % Iterate through experimental conditions
@@ -136,6 +140,10 @@ for cond = {'LM-R','LM-S','OE-R','OE-S'}
         L_num_suprathresh_G02 = sum(squeeze(connythresh(4,2,late(1):late(2))))/length(late(1):late(2));
         E_num_suprathresh_Y01 = sum(squeeze(connythresh(4,31,early(1):early(2))))/length(early(1):early(2));
         L_num_suprathresh_Y01 = sum(squeeze(connythresh(4,31,late(1):late(2))))/length(late(1):late(2));
+        E_num_suprathresh_G03 = sum(squeeze(connythresh(4,3,early(1):early(2))))/length(early(1):early(2));
+        L_num_suprathresh_G03 = sum(squeeze(connythresh(4,3,late(1):late(2))))/length(late(1):late(2));
+        E_num_suprathresh_Y02 = sum(squeeze(connythresh(4,32,early(1):early(2))))/length(early(1):early(2));
+        L_num_suprathresh_Y02 = sum(squeeze(connythresh(4,32,late(1):late(2))))/length(late(1):late(2));
 
         results_E_Cz = [results_E_Cz, E_num_suprathresh_Cz];
         results_L_Cz = [results_L_Cz, L_num_suprathresh_Cz];
@@ -145,6 +153,10 @@ for cond = {'LM-R','LM-S','OE-R','OE-S'}
         results_L_G02 = [results_L_G02, L_num_suprathresh_G02];
         results_E_Y01 = [results_E_Y01, E_num_suprathresh_Y01];
         results_L_Y01 = [results_L_Y01, L_num_suprathresh_Y01];
+        results_E_G03 = [results_E_G03, E_num_suprathresh_G03];
+        results_L_G03 = [results_L_G03, L_num_suprathresh_G03];
+        results_E_Y02 = [results_E_Y02, E_num_suprathresh_Y02];
+        results_L_Y02 = [results_L_Y02, L_num_suprathresh_Y02];
 
     end % End subject loop
 
@@ -159,11 +171,18 @@ output = [results_E_Cz(:), ...
           results_E_G02(:), ...
           results_L_G02(:), ...
           results_E_Y01(:), ...
-          results_L_Y01(:)];
+          results_L_Y01(:), ...
+          results_E_G03(:), ...
+          results_L_G03(:), ...
+          results_E_Y02(:), ...
+          results_L_Y02(:)];
+
 headings = {'E_Cz', 'L_Cz', ...
             'E_G01', 'L_G01', ...
             'E_G02', 'L_G02', ...
-            'E_Y01', 'L_Y01'};
+            'E_Y01', 'L_Y01', ...
+            'E_G03', 'L_G03', ...
+            'E_Y02', 'L_Y02'};
 
 outputTable = array2table(output, 'VariableNames', headings);
 
@@ -173,3 +192,5 @@ writetable(outputTable, fullfile(PATH_OUT, 'suprathreshold_results.csv'));
 mean(results_L_Cz)
 mean(results_L_G02)
 mean(results_L_Y01)
+mean(results_L_G03)
+mean(results_L_Y02)
