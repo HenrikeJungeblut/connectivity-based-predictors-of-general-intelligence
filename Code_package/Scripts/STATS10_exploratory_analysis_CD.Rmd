@@ -442,3 +442,115 @@ anova(fit_full, fit_full_corr0)
 
 ```
 
+
+
+## full model LATE CD, SCFC coupling, intelligence (no early CD)
+```{r}
+full_model_late <- '
+# CD
+
+  CD_later   =~ NA*L_CD_OE_R_mid + L_CD_OE_R_left + L_CD_OE_R_right +
+                L_CD_OE_S_mid + L_CD_OE_S_left + L_CD_OE_S_right +
+                L_CD_LM_R_mid + L_CD_LM_R_left + L_CD_LM_R_right +
+                L_CD_LM_S_mid + L_CD_LM_S_left + L_CD_LM_S_right
+  CD_later ~~ 1*CD_later
+
+  # --- Midline spatial proximity residuals ---
+  L_CD_OE_R_mid ~~ L_CD_OE_R_left + L_CD_OE_R_right
+  L_CD_OE_S_mid ~~ L_CD_OE_S_left + L_CD_OE_S_right
+  L_CD_LM_R_mid ~~ L_CD_LM_R_left + L_CD_LM_R_right
+  L_CD_LM_S_mid ~~ L_CD_LM_S_left + L_CD_LM_S_right
+  
+  # SCFC coupling
+  coupling =~ NA*SI_rawfunc + PT_rawfunc + RE_rawfunc + C_rawfunc + DE_rawfunc
+  coupling ~~ 1*coupling
+  RE_rawfunc ~~ DE_rawfunc
+  PT_rawfunc ~~ DE_rawfunc
+  C_rawfunc ~~ 0*C_rawfunc
+  
+  
+  # Cognitive ability
+  ## intelligence model
+  int =~ NA*BIS + equal("int=~BIS")*APM
+  int ~~ 1*int
+
+  BIS =~ NA*PC_Mean + PS_Mean + C_Mean + M_Mean
+  BIS ~~ 1*BIS
+
+  APM =~ NA*PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+  APM ~~ 1*APM
+  
+  ## structural model
+  int ~ coupling
+  int ~ CD_later
+  coupling ~~ CD_later
+
+'
+
+fit_full_late <- cfa(full_model_late, data = df, std.lv = T, 
+                      missing = "ML")
+
+summary(fit_full_late, fit.measures = T, standardized = TRUE)
+
+zFit3 <- standardizedSolution(fit_full_late)
+regressions3 <- subset(zFit3, op == "~")
+correlations3 <- subset(zFit3, op == "~~")
+
+inspect(fit_full_late, "r2")
+
+```
+
+
+
+## full model LATE CD, SCFC coupling, intelligence (no early CD) regressions set to zero
+```{r}
+full_model_late_reg0 <- '
+# CD
+
+  CD_later   =~ NA*L_CD_OE_R_mid + L_CD_OE_R_left + L_CD_OE_R_right +
+                L_CD_OE_S_mid + L_CD_OE_S_left + L_CD_OE_S_right +
+                L_CD_LM_R_mid + L_CD_LM_R_left + L_CD_LM_R_right +
+                L_CD_LM_S_mid + L_CD_LM_S_left + L_CD_LM_S_right
+  CD_later ~~ 1*CD_later
+
+  # --- Midline spatial proximity residuals ---
+  L_CD_OE_R_mid ~~ L_CD_OE_R_left + L_CD_OE_R_right
+  L_CD_OE_S_mid ~~ L_CD_OE_S_left + L_CD_OE_S_right
+  L_CD_LM_R_mid ~~ L_CD_LM_R_left + L_CD_LM_R_right
+  L_CD_LM_S_mid ~~ L_CD_LM_S_left + L_CD_LM_S_right
+  
+  # SCFC coupling
+  coupling =~ NA*SI_rawfunc + PT_rawfunc + RE_rawfunc + C_rawfunc + DE_rawfunc
+  coupling ~~ 1*coupling
+  RE_rawfunc ~~ DE_rawfunc
+  PT_rawfunc ~~ DE_rawfunc
+  C_rawfunc ~~ 0*C_rawfunc
+  
+  
+  # Cognitive ability
+  ## intelligence model
+  int =~ NA*BIS + equal("int=~BIS")*APM
+  int ~~ 1*int
+
+  BIS =~ NA*PC_Mean + PS_Mean + C_Mean + M_Mean
+  BIS ~~ 1*BIS
+
+  APM =~ NA*PropCorrOdd + equal("APM=~PropCorrOdd")*PropCorrEven
+  APM ~~ 1*APM
+  
+  ## structural model
+  int ~ 0*coupling
+  int ~ 0*CD_later
+  coupling ~~ CD_later
+
+'
+
+fit_full_late_reg0 <- cfa(full_model_late_reg0, data = df, std.lv = T, 
+                      missing = "ML")
+
+summary(fit_full_late_reg0, fit.measures = T, standardized = TRUE)
+
+inspect(fit_full_late_reg0, "r2")
+
+anova(fit_full_late, fit_full_late_reg0)
+```
