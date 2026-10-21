@@ -21,9 +21,9 @@ library(here) # v.1.0.1
 library(dplyr) # v.1.2.1 
 
 ## pick depending on residualized or normal timeseries
-load(here("Analysis_data", "df.Rda"))
-#load(here("Analysis_data", "df_rawfunc.Rda"))
-#df <- df_rawfunc
+#load(here("Analysis_data", "df.Rda"))
+load(here("Analysis_data", "df_rawfunc.Rda"))
+df <- df_rawfunc
 
 df <- rename(df, "SI" = "–SI")
 ```
@@ -78,7 +78,7 @@ cor_mat <- cor_mat[, ncol(cor_mat):1]
 
 # add reliabilities to diagonal
 x <- loadings$est.std^2
-x <- x[-c(6,7)]
+x <- x[-c(5,6)]
 x <- c(NA, x)
 n <- nrow(cor_mat)
 cor_mat[cbind(1:n, n:1)] <- round(x, 2)
