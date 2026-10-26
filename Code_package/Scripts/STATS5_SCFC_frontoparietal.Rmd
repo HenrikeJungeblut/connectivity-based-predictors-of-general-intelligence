@@ -20,11 +20,11 @@ library(pheatmap) # v.1.0.12
 library(here) # v.1.0.1
 library(dplyr) # v.1.2.1 
 
-load(here("Analysis_data", "df_frontoparietal.Rda"))
-df <- df_frontoparietal
+#load(here("Analysis_data", "df_frontoparietal.Rda"))
+#df <- df_frontoparietal
 
-#load(here("Analysis_data", "df_frontoparietal_rawfunc.Rda"))
-#df <- df_frontoparietal_rawfunc
+load(here("Analysis_data", "df_frontoparietal_rawfunc.Rda"))
+df <- df_frontoparietal_rawfunc
 
 #load(here("Analysis_data", "df_frontoparietal_rest.Rda"))
 #df <- df_frontoparietal_rest
@@ -87,8 +87,10 @@ cor_mat[upper.tri(cor_mat)] <- NA
 cor_mat <- cor_mat[, ncol(cor_mat):1]
 
 # add reliabilities to diagonal
-x <- loadings$est.std^2
-x <- x[-c(6,7)]
+squared_loadings <- loadings$est.std^2
+squared_loadings <- squared_loadings[c(1:5)]
+
+x <- c(squared_loadings, 0.77, 0.47, 0.44, 0.60, 0.87, 0.87) # added Chronbachs alpha for BIS variables and Split half reliability for APM
 n <- nrow(cor_mat)
 cor_mat[cbind(1:n, n:1)] <- round(x, 2)
 cor_mat <- as.data.frame(cor_mat)
@@ -110,7 +112,7 @@ manifest_cors <- pheatmap(cor_mat,
          angle_col = "315",
          breaks = breaks_seq)
 
-png(here("Figures", "STATS04_heatmap.png"), width = 5.5, height = 4.5, units = "in", res = 600)
+png(here("Figures", "STATS05_heatmap.png"), width = 5.5, height = 4.5, units = "in", res = 600)
 print(manifest_cors)
 dev.off()
 ```

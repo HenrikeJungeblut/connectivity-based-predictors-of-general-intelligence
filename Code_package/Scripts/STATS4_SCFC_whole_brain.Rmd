@@ -21,9 +21,9 @@ library(here) # v.1.0.1
 library(dplyr) # v.1.2.1 
 
 ## pick depending on residualized or normal timeseries
-#load(here("Analysis_data", "df.Rda"))
-load(here("Analysis_data", "df_rawfunc.Rda"))
-df <- df_rawfunc
+load(here("Analysis_data", "df.Rda"))
+#load(here("Analysis_data", "df_rawfunc.Rda"))
+#df <- df_rawfunc
 
 df <- rename(df, "SI" = "–SI")
 ```
@@ -63,6 +63,9 @@ regressions <- subset(zFit, op == "~")
 
 loadings <- subset(zFit, op == "=~")
 
+error_var <- subset(zFit, op == "~~" & lhs == rhs)
+
+
 ```
 
 ## heat map of indicators
@@ -77,10 +80,14 @@ cor_mat[upper.tri(cor_mat)] <- NA
 cor_mat <- cor_mat[, ncol(cor_mat):1]
 
 # add reliabilities to diagonal
-x <- loadings$est.std^2
-x <- x[-c(5,6)]
-x <- c(NA, x)
+squared_loadings <- loadings$est.std^2
+squared_loadings <- squared_loadings[c(1:4)]
+
+x <- c(NA, squared_loadings, 0.77, 0.47, 0.44, 0.60, 0.87, 0.87) # added Chronbachs alpha for BIS variables and Split half reliability for APM
 n <- nrow(cor_mat)
+
+
+
 cor_mat[cbind(1:n, n:1)] <- round(x, 2)
 cor_mat <- as.data.frame(cor_mat)
 
@@ -101,7 +108,7 @@ manifest_cors <- pheatmap(cor_mat,
          angle_col = "315",
          breaks = breaks_seq)
 
-png(here("Figures", "STATS03_heatmap.png"), width = 5.5, height = 4.5, units = "in", res = 600)
+png(here("Figures", "STATS04_heatmap.png"), width = 5.5, height = 4.5, units = "in", res = 600)
 print(manifest_cors)
 dev.off()
 ```
