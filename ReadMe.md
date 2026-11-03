@@ -109,14 +109,14 @@ The following R libraries need to be installed. We provide the version number of
 
 ## Order for running the scripts
 
-### 1. EEG preprocessing and generation of EEG analysis data
+### EEG preprocessing and generation of EEG analysis data
 
 1. EEG1_preprocessing.m **(NOT REPRODUCIBLE because raw EGG data is not provided in code package)**
 2. EEG2_TF_CD_EKP.m **(NOT REPRODUCIBLE because preprocessed EGG data is not provided in code package)**
 3. EEG3_plot_PLI.m **(NOT FULLY REPRODUCIBLE because connectivity matrices are not provided)**
 4. EEG4_extract_CD_in_timewindows.m
 
-### 2. general MRI preprocessing
+### General MRI preprocessing
 
 **(The following scripts are NOT REPRODUCIBLE because raw MRI data is not provided in code package)**
 
@@ -132,7 +132,7 @@ The following R libraries need to be installed. We provide the version number of
 10. MRIPrePro10_dwibiascorrect.sh
 11. MRIPrePro11_dtifit.sh
 
-### 3. Structural connectivity matrices generation scripts
+### Structural connectivity matrices generation scripts
 
 **(The following scripts are NOT REPRODUCIBLE because raw MRI data is not provided in code package)**
 
@@ -144,7 +144,7 @@ The following R libraries need to be installed. We provide the version number of
 6. SC6_SIFT.sh
 7. SC7_tck2connectome.sh
 
-### 4. Functional connectivity matrices generation scripts
+### Functional connectivity matrices generation scripts
 
 **(The following scripts are NOT REPRODUCIBLE because raw MRI data is not provided in code package)**
 
@@ -157,7 +157,7 @@ The following R libraries need to be installed. We provide the version number of
 7. FC5_extract_timeseries.sh
 8. FC6_write_label_values.sh
 
-### 2. Generation of MRI analysis data and MRI reliability
+### Generation of MRI analysis data and MRI reliability
 
 1. MRI0_check_resampling_consequences.m
 2. MRI1_check_SC_matrices.m
@@ -165,7 +165,7 @@ The following R libraries need to be installed. We provide the version number of
 5. MRI3_SCFCcoupling_frontoparietal.m
 7. MRI4_meanFC.m
 
-### 3. Statistical analysis
+### Statistical analysis
 
 1. STATS0_Power_analysis.Rmd
 2. STATS1_Descriptives.Rmd
@@ -180,7 +180,7 @@ The following R libraries need to be installed. We provide the version number of
 11. EEG5_plotting.m
 12. STATS10_exploratory_analysis_CD.Rmd
 
-### 4. Supplementary analyses
+### Supplementary analyses
 
 1. MRI5_SCFCcoupling_visual.m
 2. SUPP1_Descriptives_visual.Rmd

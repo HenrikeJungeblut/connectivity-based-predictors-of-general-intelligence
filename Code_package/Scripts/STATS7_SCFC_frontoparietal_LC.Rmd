@@ -20,12 +20,15 @@ library(lavaan) # v.0.6-21
 library(here) # v.1.0.1
 library(dplyr) # v.1.2.1 
 
+# background 
 load(here("Analysis_data", "df_frontoparietal.Rda"))
 df_frontoparietal <- rename(df_frontoparietal, "SI" = "–SI")
 
+# resting-state
 load(here("Analysis_data", "df_frontoparietal_rest.Rda"))
 df_frontoparietal_rest <- rename(df_frontoparietal_rest, "SI" = "–SI")
 
+# task-evoked
 load(here("Analysis_data", "df_frontoparietal_rawfunc.Rda"))
 df_frontoparietal_rawfunc <- rename(df_frontoparietal_rawfunc, "SI" = "–SI")
 

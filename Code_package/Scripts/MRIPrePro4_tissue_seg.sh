@@ -26,6 +26,7 @@ docker run --rm -it \
 
 rm -rf "$SCRATCH_DIR"
 
+# convert to visualize in viewer for quality control
 docker run --rm -it \
   -u $(id -u ${USER}):2018 \
   -v "$BASE_PATH":"$BASE_PATH" \

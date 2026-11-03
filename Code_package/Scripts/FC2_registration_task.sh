@@ -1,7 +1,7 @@
 # This script converts the Glasser (HCP-MMP1) surface atlas into a 3D volume 
 # and warps it into native functional (fMRI) space. It then isolates the left 
 # and right cortical hemispheres using intensity thresholds, and resamples them 
-# to perfectly match the BOLD data's voxel grid using nearest-neighbor interpolation.
+# to perfectly match the BOLD data's voxel grid using nearest-neighbour interpolation.
 cat /path/to/subject_names.txt | tr -d '\r' | while read SUBJECT; do
   echo "registering $SUBJECT"
 BASE_PATH="/path/to"

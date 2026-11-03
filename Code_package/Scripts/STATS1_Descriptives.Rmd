@@ -376,7 +376,7 @@ print(p)
 dev.off()
 ```
 
-## test differnece between whole-brain and frontoparietal Background FC
+## test difference between whole-brain and frontoparietal Background FC
 
 ```{r}
 df_commMeasures_long <- df_commMeasures_long %>%
