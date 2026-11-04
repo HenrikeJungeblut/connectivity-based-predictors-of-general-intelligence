@@ -2,6 +2,7 @@
 # present in the subject's functional space atlases. It converts the NIfTI volumes 
 # to text using fsl2ascii, then sorts the voxel values to identify exactly which 
 # Glasser regions survived the parcellation and resampling steps.
+# The output files are later used in script MRI0_check_resampling_consequences.m
 cat /path/to/subject_names.txt | tr -d '\r' | while read SUBJECT; do
 # task
 ## left 
