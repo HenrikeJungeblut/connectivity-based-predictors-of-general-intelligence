@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Title:         Connectivity-based predictors of intelligence            %
 % Subtitle:      calculating CD and ERPs                                  %
-% Author:        Anna-Lena Schubert, Henrike Jungeblut                    %
+% Author:        Anna-Lena Schubert, Mareike Hülsemann, Henrike Jungeblut %
 % Last Modified: 09/2026                                                  %
 % Note:          this script is not reproducible as preprocessed EEG data %
 %                is not provided in the code package                      %
@@ -381,7 +381,7 @@ end
 
 %% ======================= CONNECTIVITY DEGREE =================================================================================================
 
-% define base measure. May be 'ispc' pr 'pli'
+% define base measure. 
 base_measure = 'pli';
 
 % Get frequencies and time
@@ -410,7 +410,7 @@ for cond = {'LM-R','LM-S','OE-R','OE-S'}
             % Talk
             fprintf('\nreading sub (%i/%i) chans (%i/%i)', s, length(allSets), ch, size(channel_name_combs, 1));
 
-            % Load seg & tut condition conny matrices
+            % Load conny matrices
             stim = dlmread([PATH_SUB_CONNY_MATS allSets(s).name(1:7) '_' char(cond) '_' base_measure '_' char(channel_name_combs(ch, 1)) '_' char(channel_name_combs(ch, 2)) '.csv']);
 
             % Fill connycubes
@@ -489,9 +489,6 @@ for s = 1:length(allSets)
 
         % Remove response markers
         EEG = eeg_checkset(EEG, 'eventconsistency');
-
-        % Recreate continuous EEG
-        %EEG = pop_epoch2continuous(EEG,'Warning','off');
 
         % Create EventList for ERPLab
         EEG  = pop_creabasiceventlist(EEG , 'AlphanumericCleaning', 'on', 'BoundaryNumeric', { -99 }, 'BoundaryString', { 'boundary' } );

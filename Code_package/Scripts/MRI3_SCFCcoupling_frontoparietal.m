@@ -72,7 +72,7 @@ for data_type = ["rawfunc", "res", "rest"] %res: background connectivity/rawfunc
         324 325 329 342 350 351 357];
 
 
-    %% loop through subject list to frontoparietal calculate SC-FC coupling
+    %% loop through subject list to calculate frontoparietal SC-FC coupling
 
     for sub = 1:length(subjectNames_filtered)
         subject = subjectNames_filtered{sub};
@@ -114,7 +114,7 @@ for data_type = ["rawfunc", "res", "rest"] %res: background connectivity/rawfunc
 
         sub_name = [sub_name; subject];
 
-        % in most cases, lh_mat and rh_mat will have 180 or 179 columns. There
+        % In most cases, lh_mat and rh_mat will have 180 or 179 columns. There
         % are 180 columns if no parcel got lost during preprocessing.
         % lh_mat and rh_mat have 540 rows that corresponds to the number of
         % timepoints in  the fMRI timeseries.
@@ -136,7 +136,7 @@ for data_type = ["rawfunc", "res", "rest"] %res: background connectivity/rawfunc
             rh_mat = [rh_mat(:, 1:2), zeros(size(rh_mat, 1), 1), rh_mat(:, 3:end)];
         end
 
-        % in case, parcel 120 is ssing as resampling consequence, fill matrix
+        % in case, parcel 120 is missing as resampling consequence, fill matrix
         % with zero column to account for size mismatch
         if size(lh_mat,2) == 179
             lh_mat = [lh_mat(:, 1:119), zeros(size(lh_mat, 1), 1), lh_mat(:, 120:end)];
@@ -216,7 +216,7 @@ for data_type = ["rawfunc", "res", "rest"] %res: background connectivity/rawfunc
         SI = search_information(W, L);
         SISymm = -1*((SI + transpose(SI))/2); % make symmetric and switch sign to reflect ease of communication
 
-        %imagesc(SI);
+        %imagesc(SISymm);
 
         % initialize empty correlation vector
         SI_corrs = [];
@@ -250,7 +250,7 @@ for data_type = ["rawfunc", "res", "rest"] %res: background connectivity/rawfunc
 
         EresSymm = (Eres + transpose(Eres))/2; % make symmetric
 
-        %imagesc(Eres);
+        %imagesc(EresSymm);
 
         % initialize empty correlation vector
         Eres_corrs = [];

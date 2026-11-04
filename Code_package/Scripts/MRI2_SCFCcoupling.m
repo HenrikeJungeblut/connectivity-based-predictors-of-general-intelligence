@@ -24,7 +24,7 @@ addpath(fullfile(PATH_MAIN, 'Code_package', 'Tools', '2019_03_03_BCT'));
 % the script has to be run twice: Once for res (background FC) and once for
 % rawfunc (task-evoked FC). Only the variable data_type needs to be
 % adjusted.
-for data_type = ["rest", "rawfunc", "rest"] %res: background connectivity/rawfunc: task-evoked
+for data_type = ["rawfunc", "res", "rest"] %res: background connectivity/rawfunc: task-evoked
     if strcmp(data_type, 'res')
         PATH_IN = fullfile(PATH_MAIN, 'Code_package', 'MRI', 'func', 'timeseries_per_region', 'res_');
         PATH_OUT = fullfile(PATH_MAIN, 'Code_package', 'Analysis_data', 'coupling_comm_measures.csv');
@@ -287,5 +287,5 @@ for data_type = ["rest", "rawfunc", "rest"] %res: background connectivity/rawfun
 
     %% combine data to table and save
     dataTable = table(sub_name, Ediff_all, SI_all, T_all, Eres_all, F_all);
-    writetable(dataTable, PATH_OUT)
+    writetable(dataTable, PATH_OUT);
 end

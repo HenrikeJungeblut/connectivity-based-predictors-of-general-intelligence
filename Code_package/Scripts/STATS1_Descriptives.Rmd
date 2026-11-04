@@ -23,6 +23,7 @@ library(ggpubr) # v.0.6.0
 library(tidyr) # v.1.3.1
 library(see) # v.0.12.0
 library(afex) # v.1.5-1
+library(ggdist) # v3.3.3
 
 df_commMeasures_raw <- 
   read.csv(here("Analysis_data", "coupling_comm_measures.csv"), sep=",")
@@ -61,7 +62,7 @@ data_outlier <- data_outlier %>% group_by(Subject) %>%
   mutate(PropCorrEven = mean(Accuracy[Odd_Even == 2]))
 data_outlier <- data_outlier%>% filter(RTms >= 150) 
 
-dataACC <- data_outlier #dataACC = Spalte mit Prozentualer Richtigkeit und nur mit Trials, die RT über 150 ms haben
+dataACC <- data_outlier #dataACC = column with percentage correct and only trials with RT > 150 ms
 
 APM <- as.matrix(dataACC[,c("Subject", "PropCorrOdd", "PropCorrEven", "PropCorr")])
 APM <- unique(APM)
@@ -69,7 +70,7 @@ APM <- unique(APM)
 df_intelligence <- merge(df_BIS, APM, by = "Subject", all = TRUE)
 df_intelligence$numcorrect <- 36*df_intelligence$PropCorr
 
-# remove invalid participants
+# remove invalid participants (participants took IQ test but were not included in the sample due to exclusion criteria such as color blindness)
 df_intelligence <- df_intelligence[-c(216, 217, 218, 219, 220, 221, 222),]
 df_intelligence <- df_intelligence[, c("Subject", "PC_Mean", "PS_Mean", "M_Mean", "C_Mean", "g_Mean", "PropCorrOdd", "PropCorrEven")]
 
@@ -179,7 +180,7 @@ percentage_Exclusion_CD <- num_NAs_generated_CD/(nrow(df_CD)*8)
 ```
 
 
-## clculate chronbachs alpha for BIS subscales and split half reliability for APM
+## calculate chronbachs alpha for BIS subscales and split half reliability for APM
 
 ```{r}
 #BIS
@@ -431,7 +432,7 @@ t_results <- t_results %>%
 
 t_results
 ```
-## test differnece between whole-brain and frontoparietal Task-evoked FC
+## test difference between whole-brain and frontoparietal task-evoked FC
 
 ```{r}
 df_commMeasures_rawfunc_long <- df_commMeasures_rawfunc_long %>%

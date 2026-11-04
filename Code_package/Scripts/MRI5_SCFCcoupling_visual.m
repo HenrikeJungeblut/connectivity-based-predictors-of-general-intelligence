@@ -20,7 +20,7 @@ PATH_MAIN   = fullfile(parts{1:end-2});
 PATH_IN_dti = fullfile(PATH_MAIN, 'Code_package', 'MRI', 'dwi');
 addpath(fullfile(PATH_MAIN, 'Code_package', 'Tools', '2019_03_03_BCT'));
 
-%% set whether rawfunc/rest data should be used
+%% set whether res/rawfunc data should be used
 for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-evoked
     if strcmp(data_type, 'res')
         PATH_IN = fullfile(PATH_MAIN, 'Code_package', 'MRI', 'func', 'timeseries_per_region', 'res_');
@@ -30,14 +30,14 @@ for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-e
         PATH_OUT = fullfile(PATH_MAIN, 'Code_package', 'Analysis_data', 'rawfunc_coupling_comm_measures_visual.csv');
     end
 
-    % loading subject list:
+    %% loading subject list:
     fileID = fopen(fullfile(PATH_MAIN, 'Code_package', 'Data', 'subject_list.txt'), 'r');
 
     subjectNames = textscan(fileID, '%s');
     fclose(fileID);
     subjectNames = subjectNames{1};
 
-    %% remove outliers who perform only around chance level
+    % remove outliers who perform only around chance level
     % Additionally, the three subjects sub-028, sub-154, sub-202 are
     % excluded because these subjects have disconnected structural visual networks
     % (W), which leads to issues in downstream calculation of communication
@@ -50,7 +50,7 @@ for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-e
     % Filter out the outliers
     subjectNames_filtered = subjectNames(~ismember(subjectNames, to_remove));
 
-    %initialize vectors for SC-FC coupling for all measures
+    %% initialize vectors for SC-FC coupling for all measures
     Ediff_all = [];
     SI_all = [];
     T_all = [];
@@ -75,17 +75,17 @@ for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-e
 
         subject = subjectNames_filtered{sub};
 
-        % Subject-specific removals
-        if strcmp(subject, 'sub-019')
+        % Subject-specific parcel removals
+        if strcmp(subject, 'sub-019') % functional data coverage
             removed = [118 120 300];
-        elseif strcmp(subject, 'sub-021')
+        elseif strcmp(subject, 'sub-021') % functional data coverage
             removed = [120 172 300 352];
-        elseif strcmp(subject, 'sub-025') || strcmp(subject, 'sub-083') % zero nodes
+        elseif strcmp(subject, 'sub-025') || strcmp(subject, 'sub-083') % zero nodes in SC matrix
             removed = [120 300 332];
-        elseif strcmp(subject, 'sub-197')
+        elseif strcmp(subject, 'sub-197') % functional data coverage
             removed = [120 183 300];
         else
-            removed = [120 300]; %resampling consequence
+            removed = [120 300]; % resampling consequence
         end
 
         % get parcels in visual_areas_orig that are not in removed ->
@@ -119,7 +119,7 @@ for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-e
             rh_mat = [rh_mat(:, 1:2), zeros(size(rh_mat, 1), 1), rh_mat(:, 3:end)];
         end
 
-        % in case, parcel 120 is ssing as resampling consequence, fill matrix
+        % in case, parcel 120 is missing as resampling consequence, fill matrix
         % with zero column to account for size mismatch
         if size(lh_mat,2) == 179
             lh_mat = [lh_mat(:, 1:119), zeros(size(lh_mat, 1), 1), lh_mat(:, 120:end)];
@@ -136,16 +136,6 @@ for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-e
         func_mat = func_mat(:,visual_areas);
 
 
-        bad_nodes = [];
-        % remove subject-specific nodes
-        if ismember(subject, {'sub-025'})
-            bad_nodes = [52];
-        end
-        %
-        % Remove them ALL at once to avoid index shifting
-        func_mat(:, bad_nodes) = [];
-
-
         % Fisher-Z correlation matrix
         Z_func_corr_mat = atanh(corrcoef(func_mat));
         Z_func_corr_mat(isinf(Z_func_corr_mat)) = NaN;
@@ -159,10 +149,6 @@ for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-e
 
         W = W(visual_areas, visual_areas);
         size_dwi = [size_dwi; length(W)];
-
-        % remove zero nodes as for func (see above)
-        W(bad_nodes, :) = [];
-        W(:, bad_nodes) = [];
 
         deg = sum(W>0, 2);        % node degree (number of nonzero connections per node)
         zero_nodes = find(deg==0);
@@ -198,7 +184,7 @@ for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-e
         SI = search_information(W, L);
         SISymm = -1*((SI + transpose(SI))/2); % make symmetric and switch sign to reflect ease of communication
 
-        %imagesc(SI);
+        %imagesc(SISymm);
 
         % initialize empty correlation vector
         SI_corrs = [];
@@ -232,7 +218,7 @@ for data_type = ["rawfunc", "res"] %res: background connectivity/rawfunc: task-e
 
         EresSymm = (Eres + transpose(Eres))/2; % make symmetric
 
-        %imagesc(Eres);
+        %imagesc(EresSymm);
 
         % initialize empty correlation vector
         Eres_corrs = [];

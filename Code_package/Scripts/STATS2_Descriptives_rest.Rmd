@@ -62,7 +62,7 @@ data_outlier <- data_outlier %>% group_by(Subject) %>%
   mutate(PropCorrEven = mean(Accuracy[Odd_Even == 2]))
 data_outlier <- data_outlier%>% filter(RTms >= 150) 
 
-dataACC <- data_outlier #dataACC = Spalte mit Prozentualer Richtigkeit und nur mit Trials, die RT über 150 ms haben
+dataACC <- data_outlier #dataACC = column with percentage correct and only trials with RT > 150 ms
 
 APM <- as.matrix(dataACC[,c("Subject", "PropCorrOdd", "PropCorrEven", "PropCorr")])
 APM <- unique(APM)

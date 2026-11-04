@@ -57,13 +57,17 @@ fit_CD_int <- cfa(CD_int_model, data = df, std.lv = T,
                       missing = "ML")
 
 summary(fit_CD_int, fit.measures = T, standardized = TRUE)
-parameterEstimates(fit_CD_int, level = 0.95, standardized = T, output = "pretty")
+#parameterEstimates(fit_CD_int, level = 0.95, standardized = T, output = "pretty")
 
 zFit <- standardizedSolution(fit_CD_int)
 regressions <- subset(zFit, op == "~")
 correlations <- subset(zFit, op == "~~")
 
 loadings <- subset(zFit, op == "=~")
+
+zFit_unstandardized <- parameterEstimates(fit_CD_int)
+loadings_unstandardized <- subset(zFit_unstandardized, op == "=~")
+error_var_unstandardized <- subset(zFit_unstandardized, op == "~~" & lhs == rhs)
 
 ```
 
@@ -79,10 +83,14 @@ cor_mat[upper.tri(cor_mat)] <- NA
 cor_mat <- cor_mat[, ncol(cor_mat):1]
 
 # add reliabilities to diagonal
-squared_loadings <- loadings$est.std^2
+squared_loadings <- loadings_unstandardized$est^2
 squared_loadings <- squared_loadings[c(1:8)]
+errorvars <- error_var_unstandardized$est[6:13] 
 
-x <- c(squared_loadings, 0.77, 0.47, 0.44, 0.60, 0.87, 0.87) # added Chronbachs alpha for BIS variables and Split half reliability for APM
+varT <- 1 # variance of the latent variable is set to 1 in model specification
+rels <- (squared_loadings*varT)/(squared_loadings*varT + errorvars)
+
+x <- c(rels, 0.77, 0.47, 0.44, 0.60, 0.87, 0.87) # added Chronbachs alpha for BIS variables and Split half reliability for APM
 n <- nrow(cor_mat)
 cor_mat[cbind(1:n, n:1)] <- round(x, 2)
 cor_mat <- as.data.frame(cor_mat)

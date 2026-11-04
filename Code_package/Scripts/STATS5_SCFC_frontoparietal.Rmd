@@ -69,10 +69,15 @@ summary(fit_SCFC_int, fit.measures = T, standardized = TRUE)
 inspect(fit_SCFC_int, "r2")
 
 zFit <- standardizedSolution(fit_SCFC_int)
+zFit_unstandardized <- parameterEstimates(fit_SCFC_int)
+
 regressions <- subset(zFit, op == "~")
 
 loadings <- subset(zFit, op == "=~")
+loadings_unstandardized <- subset(zFit_unstandardized, op == "=~")
 
+error_var <- subset(zFit, op == "~~" & lhs == rhs)
+error_var_unstandardized <- subset(zFit_unstandardized, op == "~~" & lhs == rhs)
 ```
 
 ## heat map of indicators
@@ -87,10 +92,15 @@ cor_mat[upper.tri(cor_mat)] <- NA
 cor_mat <- cor_mat[, ncol(cor_mat):1]
 
 # add reliabilities to diagonal
-squared_loadings <- loadings$est.std^2
+squared_loadings <- loadings_unstandardized$est^2
 squared_loadings <- squared_loadings[c(1:5)]
+errorvars <- error_var_unstandardized$est[6:9] # select DE, -SI, PT, RE
+errorvars <- c(errorvars, 0)
 
-x <- c(squared_loadings, 0.77, 0.47, 0.44, 0.60, 0.87, 0.87) # added Chronbachs alpha for BIS variables and Split half reliability for APM
+varT <- 1 # variance of the latent variable is set to 1 in model specification
+rels <- (squared_loadings*varT)/(squared_loadings*varT + errorvars)
+
+x <- c(rels, 0.77, 0.47, 0.44, 0.60, 0.87, 0.87) # added Chronbachs alpha for BIS variables and Split half reliability for APM
 n <- nrow(cor_mat)
 cor_mat[cbind(1:n, n:1)] <- round(x, 2)
 cor_mat <- as.data.frame(cor_mat)

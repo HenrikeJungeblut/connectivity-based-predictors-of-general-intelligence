@@ -68,7 +68,7 @@ df_rest <- df_frontoparietal_rest %>%
 
 ```{r}
 SCFC_int_model <- '
-## coupling model
+## coupling model -> we take the exact same model specification as in the earlier frontoparietal models, residual variance of C and C_rawfunc set to zero to match model in STATS5_SCFC_frontoparietal (negative variance)
 coupling =~ SI + PT + RE + C + DE
 RE ~~ DE
 PT ~~ DE
@@ -82,7 +82,7 @@ C_rawfunc ~~ 0*C_rawfunc
 SI ~~	SI_rawfunc
 PT ~~ PT_rawfunc
 RE ~~ RE_rawfunc
-#C ~~ C_rawfunc
+#C ~~ C_rawfunc # cannot correlate because variances of both variables were set to zero
 DE ~~ DE_rawfunc
 
 

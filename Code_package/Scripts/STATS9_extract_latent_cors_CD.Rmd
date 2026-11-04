@@ -41,7 +41,7 @@ data_outlier <- data_outlier %>% group_by(Subject) %>%
   mutate(PropCorrEven = mean(Accuracy[Odd_Even == 2]))
 data_outlier <- data_outlier%>% filter(RTms >= 150) 
 
-dataACC <- data_outlier #dataACC = Spalte mit Prozentualer Richtigkeit und nur mit Trials, die RT über 150 ms haben
+dataACC <- data_outlier #dataACC = column with percentage correct and only trials with RT > 150 ms
 
 APM <- as.matrix(dataACC[,c("Subject", "PropCorrOdd", "PropCorrEven", "PropCorr")])
 APM <- unique(APM)
@@ -49,6 +49,7 @@ APM <- unique(APM)
 df_intelligence <- merge(df_BIS, APM, by = "Subject", all = TRUE)
 df_intelligence$numcorrect <- 36*df_intelligence$PropCorr
 
+# remove invalid participants (participants took IQ test but were not included in the sample due to exclusion criteria such as color blindness)
 df_intelligence <- df_intelligence[-c(216, 217, 218, 219, 220, 221, 222),]
 df_intelligence <- df_intelligence[, c("Subject", "PC_Mean", "PS_Mean", "M_Mean", "C_Mean", "g_Mean", "PropCorrOdd", "PropCorrEven")]
 

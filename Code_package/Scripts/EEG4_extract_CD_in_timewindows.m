@@ -10,7 +10,6 @@
 
 %% ---------- Necessary Functions -----------------------------------------
 % %
-% % EEGLAB version eeglab2025.0.0 with the following plugins is used:
 % % The EEGLAB toolbox with all plugins installed is provided with this
 % % code within the folder "Tools".
 
